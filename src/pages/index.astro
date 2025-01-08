@@ -1,0 +1,19 @@
+---
+
+import MainBackgroundLayout from "../layouts/MainBackgroundLayout.astro"
+const pageTitle = "A collection of my various projects...";
+const pageSubHeading = '...and my ramblings about them';
+---
+
+<MainBackgroundLayout pageTitle={pageTitle}, pageSubHeading={pageSubHeading}>
+	<div class="WelcomePara">
+		<p>Heya! I decided I should probably make a more ordered way of disccusing my different projects, instead of linking them all over my website, which isn't (wasn't?) particually useful for finding infomation</p>
+	</div>
+<p>kirsty suggested having some sort of grid setup with the different tags which could be good - if i wanted to go crazy i could do a thing where it has number of posts that use the tag or something maybe</p>
+</MainBackgroundLayout>
+
+<style>
+	.WelcomePara {
+		padding-top: 3vh;
+	}
+</style>

@@ -1,0 +1,14 @@
+---
+import MainBackgroundLayout from "./MainBackgroundLayout.astro";
+const { frontmatter } = Astro.props;
+---
+
+<MainBackgroundLayout pageTitle={frontmatter.title} pageSubHeading={frontmatter.description}>
+
+
+<p>{frontmatter.pubDate.toLocaleDateString()}</p>
+
+<p>Written by: {frontmatter.author}</p>
+
+<slot />
+</MainBackgroundLayout>

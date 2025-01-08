@@ -1,0 +1,29 @@
+---
+import { getCollection } from "astro:content";
+
+import MainBackgroundLayout from "../../layouts/MainBackgroundLayout.astro";
+import '../../styles/global.css'
+import BlogPost from "../../components/BlogPost.astro";
+
+const pageTitle="The complete collection:"
+const pageSubHeading="Here we have all of my posts, ordered from newest:"
+const allPosts = await getCollection("blog");
+---
+
+
+<MainBackgroundLayout pageTitle={pageTitle} pageSubHeading={pageSubHeading}>
+
+    <div class="divWrappingPostsList">        
+    {
+        allPosts.map((post) => (
+        <BlogPost post={post}/>
+    ))
+    }
+    </div>
+
+</MainBackgroundLayout>
+<style>
+    .divWrappingPostsList{
+        padding-top:3vh ;
+    }
+</style>

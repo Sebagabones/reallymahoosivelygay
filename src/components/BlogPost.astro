@@ -1,0 +1,26 @@
+---
+
+import { getEntry, render } from 'astro:content';
+const { post  } = Astro.props;
+const url=`/posts/${post.id}/`;
+const title=post.data.title;
+
+
+---
+
+<a href={url}>
+    <article class="blogListPosts">
+        <h4 class="postTitle">{title}</h4>
+        <h6 class="postBodyLimited">{post.data.pubDate.toLocaleDateString()}</h6>
+        
+        <p class="postDescription">{post.data.description}</p>
+        
+    </article>
+</a>
+<style>
+    .blogListPosts {
+  max-width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
