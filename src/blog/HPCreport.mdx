@@ -1,0 +1,43 @@
+---
+title: 'Worrying about aesthetics of an assignment - Alice in Wonderland-esque levels of going down the rabbit-hole'
+pubDate: 2024-12-20
+description: 'This is genuinely one of the daftest ways I have spent my time, but it is a good example of my brain in action'
+---
+import { Code } from 'astro-expressive-code/components'
+
+
+I was just going to link to the pdf itself, however I realised wanted to talk about the report itself too lmao.
+If you just want to see the report, it's available [here](/theIdioticTimeDistributionOfAReport.pdf) (with my group-mate's name redacted as I haven't asked him for permission, along with both of our student ID's), otherwise, get ready for some rambling.
+
+Firstly, yes, I went *slightly* overkill with the Catppuccin theming, but I did really enjoy relearning Matplotlib (which, yes, was also themed lol) - but I am getting ahead of myself.
+
+My workflow for this was *slightly* insane, as my group-mate, who was writing up the code implementation explanation did not want to learn Latex, and so I had to find a way to convert Markdown to Latex, while getting the theming to work properly.
+
+Thankfully, pandoc exists, and so running the following worked well enough for me:
+```nu
+pandoc —listings -f markdown -t latex -o report.tex report.md
+```
+<br />
+Ironically, I didn't actually use <ins>listings</ins> in the end report, as I found the <ins>minted</ins> package with [Pygments](https://pygments.org/) to work a bit better, and (importantly) already had a Catppuccin theme! 
+So, the next step was to (tediously) go through the generated tex file, replacing every <ins>listed</ins> call with an equivalent <ins>minted</ins> version (a rough example would be to replace every instance of:
+``` latex
+\passthrough{\lstinline!make release!}
+```				
+<br />
+with
+```latex
+\textbf{\mintinline{bash}{make release}}
+```	
+<br />			
+Also, huge thank you to Yukai Chou, who wrote a lovely latex function I borrowed to get some parts of minted to work (code <a href="https://github.com/gpoore/minted/issues/288#issuecomment-1501540637"> here</a>)!
+
+Once this, and the rest of the small things needed to touch up the document (so many things) had been done, I could then simply generate a pdf from the tex file using
+```nu
+pdflatex —shell-escape report.tex 
+```
+<br />
+If you want to see what my tex file looked like at the end of it all, I have attached it <a href="/theDreadedTexFile.tex">here</a>.
+
+You may be wondering, surely this must have taken hours, just to get a nice colour-scheme on a report... and you would be right to wonder, I genuinely do not know why I put myself through this. 
+On the upside, I guess I get to ramble about it here, and we *did* get a good grade for presentation (to be honest, we got 100% in the entire assessment, so I am going to tell myself without the theming we might have only got 14/15 or something).
+Oh, and no, the hours spent do not include setting up Matplotlib to produce graphs that matched the colour-scheme - that actually wasn't too bad, and using Matplotlib was easier for me because it meant I was able to create the graphs using code, which worked well for my brain lol.

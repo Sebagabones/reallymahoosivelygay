@@ -1,0 +1,28 @@
+---
+import '../styles/global.css'
+import MainBackgroundLayout from '../layouts/MainBackgroundLayout.astro'
+
+const pageTitle = "The server I actually turned off";
+const pageSubHeading = " ";
+---
+
+
+<MainBackgroundLayout pageTitle={pageTitle}>
+		<p>
+			In keeping with the mostly IBM/Lenovo theme - bonescallhome is an IBM
+			x3650 M2 which has since been decomissioned, partly due to lack of
+			pointfulness, but also due to unreliablity - this had a bit (roughly
+			1.5TB) of hardware setup raid storage (about 400GB of raid 1E & just
+			under 1TB of raid 5), although it was only running two dual core Xeon
+			CPUS with 12 GB of DDR2 (!) RAM.
+		</p>
+		<p>
+			My plan for this was to <em>possibly</em> set this up to store a backup
+			of the fast storage I am planning to setup on
+			<a href="bonesrunhome">bonesrunhome</a>, possibly by swapping in
+			the hard drives from <a href="bonescallhome">bonescallhome</a> - but I have since realised that it is
+			simply too old for any sort of use, and so it'll probably just sit in my store room until I take it to
+			ewaste.
+		</p>
+</MainBackgroundLayout>
+

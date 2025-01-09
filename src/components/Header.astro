@@ -1,19 +1,22 @@
 ---
 import '../styles/global.css';
 import ThemeButton from './ThemeButton.astro';
+import { Code } from 'astro-expressive-code/components'
+
 ---
 <header class="headerNav">
     <nav class="container">
         <ul>
-            <li><button class="secondary"><a class="themeButton" href="/">Home</a></button></li>        
-            <li><button class="secondary"><a class="themeButton" href="/posts/">Posts</a></button></li>
+            <li><ThemeButton /></li>
         </ul>
         <ul>
             <li><b><a href="/" class="HeaderMainLink">Mahoosively Gay</a></b></li>
         </ul>
         <ul>
-            <li><ThemeButton /></li>
+            <li><button class="secondary"><a class="themeButton" href="/contact">Contact</a></button></li>      
+            <li><button class="secondary"><a class="themeButton" href="/blog">Blog</a></button></li>
         </ul>
+
     </nav>
   </header>
 

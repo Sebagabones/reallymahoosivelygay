@@ -1,19 +1,225 @@
 ---
-
-import MainBackgroundLayout from "../layouts/MainBackgroundLayout.astro"
-const pageTitle = "A collection of my various projects...";
-const pageSubHeading = '...and my ramblings about them';
+import HomePageLayout from "../layouts/HomePageLayout.astro";
+const pageTitle = "...Look, an attempt was made"
 ---
+<HomePageLayout pageTitle={pageTitle}>
+    <br>
+    <h3>An about me:</h3>
 
-<MainBackgroundLayout pageTitle={pageTitle}, pageSubHeading={pageSubHeading}>
-	<div class="WelcomePara">
-		<p>Heya! I decided I should probably make a more ordered way of disccusing my different projects, instead of linking them all over my website, which isn't (wasn't?) particually useful for finding infomation</p>
-	</div>
-<p>kirsty suggested having some sort of grid setup with the different tags which could be good - if i wanted to go crazy i could do a thing where it has number of posts that use the tag or something maybe</p>
-</MainBackgroundLayout>
+    <p>
+        Heya! I'm Seb, and my pronouns are they/them.
+        I'm studying
+        computer science at UWA, and this is my attempt at a (low effort) personal website.
+    </p>
+    <h4>Interests</h4>
+    <p>
+        So, in case it wasn't obvious, I kinda enjoy messing around with computers. I am very much the stereotypical
+        Linux user, and while I do enjoy making things "pretty" (I mean, I <i>am</i> a contributor to Catppuccin), I
+        usually
+        enjoy High Performance Computing (multithreading my beloved), messing with Asynchronous anything, Data
+        Formatting/Collection/Pipelining and automating anything I can (I have 100%
+        spent
+        more time automating something than it would have taken to just do it manually). I also go crazy for
+        anything with
+        Linux (the more absurd the better). I am also currently (2024) the Vice-President of the <a
+            href="https://ucc.asn.au">University Computer Club</a> and take great joy in the amount of
+        <s>sensible</s> projects the club gets up to (ask me about Coffinfish sometime!). Outside of that, I enjoy
+        riding motorcycles and bicycles, and listening to music - to see what I am currently listening to, and the
+        20
+        songs I have played the most in recent history, click <a href="spotifySongs">here</a> (if you want to see how I did this, a write-up is in my blog). I use Emacs (because of course I do), and you can see my configuration files <a href="emacsFiles">here</a>.
 
-<style>
-	.WelcomePara {
-		padding-top: 3vh;
-	}
-</style>
+    </p>
+    <div class="skills">
+        <h4>Skills</h4>
+        <p>
+            I am proficient in using Python and C/C++, and I enjoyed Java when I last used it in uni. Sadly, I have
+            written a bunch of code
+            in JavaScript (including a <s>lovely</s> flavour called Google Apps Script), and so I am perfectly happy
+            to
+            write code in that, although I do prefer Typescript. If I am forced to write a bash script, I will
+            unironically use Amber instead, until it doesn't work lol. I have used SQL,
+            and obviously I can use HTML and CSS lol, and I have used vanilla React by itself before (parts of this
+            website do actually use pure React! For example, <a href="spotifySongs">here</a>). I lightly used
+            some frameworks before, in the form of RedwoodJS and a tad of Deno.
+            I have also used a little bit of Ruby, and have used Rake files before, and found them fun.
+        </p>
+        <p>
+            I am perfectly comfortable using Numpy and Matplotlib in Python, and I have done network programming, as
+            well as using MPICH and OpenMP for multi-threading and multi-node computing in C/C++, and enjoyed it
+            immensely. I also quite like messing around with Pulumi for automating infrastucture creation, and I
+            have
+            had a heap of fun using Capistrano to automate deploying parts of this website (read about that <a
+                href="emacsConfigOnMyWebsite">here</a>)
+        </p>
+        <p>I am <i>incredibly</i> at ease at using the command line on Unix systems lol - I am not exaggerating when
+            I
+            say I am more comfortable and proficient at using (and fixing/trouble shooting) Linux systems compared
+            to
+            Windows systems. I take great
+            joy in running the most cooked and cursed setups as my daily driver, and I am currently using Bedrock
+            Linux
+            with an EndeavourOS stratum and an Alpine Linux stratum </p>
+    </div>
+
+    <div class="projects">
+        <h4>A list of my current (constantly) changing projects</h4>
+        <details open>
+            <summary>Software</summary>
+            <p><i>This is a list of my current projects, if you want to see write-ups of my completed projects, you can view them at my <a href="/blog">blog</a>.</i></p>
+            <ul>
+                <li>
+                    Server Side Rendered Includes (SSRI), a web templating framework I built inspired by Apache
+                    Server Side Includes. I have a lot to ramble about with it, so the entry here is short, but if
+                    you want to read more about it, the write up of it is <a href=ssri>here</a>,
+                    and the
+                    GitHub repo is <a href="https://github.com/Sebagabones/Server-Side-Rendered-Includes">here</a>.
+                </li>
+                <li>
+                    A RedwoodJS website for better management of <a href="https://ucc.asn.au">UCC</a>'s member VM's,
+                    replacing the Proxmox UI. This started out as a Pulumi project to speed up VM creation, and
+                    while there may still be part of that in the CI side of it, I am now planning to probably try to
+                    just use the Proxmox API.
+                </li>
+                <li>
+                    Theming for KDE's Labplot, to add Catppuccin themes to it - this will hopefully be finished
+                    soon<sup>tm</sup>. In true fashion, it all works, I am just running into the classic issue where
+                    finishing the last 10% of the documentation is harder than the rest of it was. If you want to
+                    try it out,
+                    my repository is <a href=https://github.com/Sebagabones/labplot>here</a>
+                </li>
+                <li>
+                    The <a href="https://github.com/catppuccin/vimium">Vimium Catppuccin port</a> which I maintain
+                    (which, to be honest, has needed very little maintenance so far).
+                </li>
+            </ul>
+        </details>
+
+        <details open>
+            <summary>Hardware</summary>
+            <p><i>This is mostly up to date, however the pages linked to from here may not all be yet</i></p>
+            <ul>
+                <li>
+                    My current daily driver is (sadly) not very exciting from a hardware perspective - it is an Asus
+                    Zenbook 13, which has me trapped in its OLED clutches. However, finding the hardware too
+                    sensible for my standards, my solution was to make the Operating System as cursed as possible,
+                    which is how I wound up running <a href="https://bedrocklinux.org/">Bedrock Linux</a> with an
+                    EndeavourOS stratum along with an Alpine Linux stratum (and I have also installed the Nix
+                    package
+                    manager too of course). This has a <i>very</i> Catppuccin themed i3 setup, although sadly
+                    overall it mostly "just works<sup>tm</sup>" too often for my liking.
+                </li>
+                <li>
+                    An X270 thinkpad that is running FreeBSD, which I have been slowly
+                    upgrading with a new IPS FHD screen, new larger batteries, a 1TB
+                    Samsung M.2 SSD and 16GB of ram. Alas, after writing some incredibly fun scripts to avoid the
+                    forsaken
+                    BD-PROCHOT, I have pretty much stopped using it lol.
+                </li>
+                <li>
+                    An x201 thinkpad that is running Alpine Linux with i3 (yes I know -
+                    I'm falling down the rabbit hole even more) - this has been upgraded
+                    as far as it can go (8 GB of ram let's go). This has also been phased out of regular use, mostly
+                    due to
+                    the screen being borderline painful to use.
+                </li>
+
+                <li>
+                    An IBM x3200 M3 server (<a href="bonescallhome">bonescallhome</a>) which is no longer
+                    hosting
+                    this
+                    webpage - in fact, this is no longer even at my house! I found it too sensible, and so in true
+                    fashion
+                    for myself, I gave it to a friend.
+                </li>
+
+                <li>
+                    An IBM x3550 M4 server (<a href="bonesrunhome">bonesrunhome</a>)
+                    which is running a few VMs (including a debian VM which is dedicated
+                    to web-hosting)
+                </li>
+
+                <li>
+                    A project that has now been put on the back burner: a Toshiba T3200 -
+                    this has a whopping 4MBs of ram, with a 40MB hard drive. Currently it
+                    isn't booting, and so my focus is to fix/replace the floppy disk drive
+                    (this is very much on the back burner on account of it now no longer
+                    turning on lol - unsure why, but it seems I may have let the magic
+                    smoke out- hopefully I'll fix it one day)
+                </li>
+                <li>
+                    A ThinkPad 770z running Tiny Core Linux. This has had it's hard drive (an IBM <s>Deskstar</s>
+                    Deathstar
+                    that had started rattling) replaced with an SD card, and was an adventure in finding a Distro
+                    that
+                    supported such an old CPU. I setup some sort of window manager on it, iirc IceWM, and have
+                    promptly
+                    not
+                    used it since.
+                </li>
+                <li>
+                    An IBM x3650 M2 (<a href="bonescrawlhome">bonescrawlhome</a>). This is not and will never
+                    be
+                    used -
+                    if you live in perth and want it please let me know lol.
+                </li>
+
+                <li>
+                    Another (short-lived) acquisition is an IBM
+                    <a href="Power7"> Power 750 Express.</a>
+                </li>
+
+                <li>
+                    <a href="bonesboundhome">bonesboundhome</a> an IBM x3650 M4 that is running as my secondary
+                    server
+                    alongside <a href="bonesrunhome">bonesrunhome</a>.
+                </li>
+
+                <li>
+                    I also have an IBM bladecenter H, but I have no idea what I will ever
+                    use it for - this may be destined to die a horrible death soon, mostly due to the fact that <a
+                        href="https://ucc.asn.au">UCC</a> tries to
+                    murder me whenever it starts up.
+                </li>
+
+                <li>
+                    <a href="myRack" class="rackCall">The server rack</a> that is currently heating
+                    my living room.
+                </li>
+            </ul>
+        </details>
+    </div>
+</HomePageLayout>
+
+<script is:inline>
+// Honestly this might just do nothing but I feel like it helps lmao
+window.addEventListener("DOMContentLoaded", function() {
+const linkToImage = document.querySelector("a.rackCall");
+
+linkToImage.addEventListener("mouseover", preloadImages, true);
+linkToImage.myParam = ["/fullFrontalRack.JPG"]
+
+function preloadImages(eventImade) {
+    if (!preloadImages.list) {
+        preloadImages.list = [];
+
+
+    }
+
+    var list = preloadImages.list;
+  console.log(list)
+    for (var i = 0; i < eventImade.currentTarget.myParam.length; i++) {
+
+        var img = new Image();
+      console.log(img)
+        img.onload = function() {
+            var index = list.indexOf(this);
+            if (index !== -1) {
+                list.splice(index, 1);
+            }
+        }
+        list.push(img);
+        img.src = eventImade.currentTarget.myParam[i];
+    }
+}
+}, {once : true});
+</script>

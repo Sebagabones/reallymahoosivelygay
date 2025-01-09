@@ -1,0 +1,37 @@
+---
+import '../styles/global.css'
+import MainBackgroundLayout from '../layouts/MainBackgroundLayout.astro'
+
+const pageTitle = "The almost sensible server";
+const pageSubHeading = " ";
+---
+
+<MainBackgroundLayout pageTitle={pageTitle}, pageSubHeading={pageSubHeading}>
+
+	<p>
+		bonesboundhome is an IBM x3650 M4 - I grabbed it from some random business off marketplace, and with a
+		firmware update it hopefuly won't blow up anytime soon lol
+	</p>
+
+	<p>
+		It currently has two Xeon E5-2650's and 384GB of RAM with EndeavourOS (I still do not know why I did
+		this,
+		one day I'll install Alpine)
+		as an operating system. At the time of writing this isn't
+		running
+		right now, due to NetworkManager disliking me, and me disliking NetworkManager enough to not be bothered
+		to
+		fix it right now. This was running my NFS server, with NVME storage added in via PCIE,
+		which was mostly setup so I could run MPICH at home for my HPC unit (the class had run out of credit on
+		Setonix and I wasn't going to waste the opportunity for the homelab to actually be useful for once
+		lmao).
+	</p>
+
+	<p>
+		I also have written a custom fan curve for this in C - which I will
+		eventually add to my github - although I did write a version of it in
+		python for bonesrunhome, which is alive and well on my github. Arguably the Python implementation is much
+		more sensible, as it isn't doing much more than just running as a script that calls a system call.
+	</p>
+
+</MainBackgroundLayout>

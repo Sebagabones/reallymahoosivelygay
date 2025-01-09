@@ -87,7 +87,8 @@ const themeSwitcher = {
           if (buttonThemePressed == "dark" || buttonThemePressed == "light") {
 
             document.querySelector("html")?.setAttribute(this.rootAttribute, buttonThemePressed);
-
+            // document.querySelector("html")?.setAttribute(this.rootAttribute, 'dark');
+            // document.querySelector("html")?.setAttribute(this.rootAttribute, 'catppuccin-macchiato');
             window.localStorage?.setItem(THEME_STORAGE_KEY, buttonThemePressed);
 
           }

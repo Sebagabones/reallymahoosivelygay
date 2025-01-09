@@ -1,1 +1,1 @@
-My attempt at create a blog and using a framework - I am using astro for this 
+My attempt at creating a website using a framework - I am using astro for this 

@@ -1,0 +1,46 @@
+---
+import '../styles/global.css'
+import MainBackgroundLayout from '../layouts/MainBackgroundLayout.astro'
+import { Code } from 'astro-expressive-code/components'
+import configel from '/codeFiles/emacsConfFiles/config.el?url&raw';
+import initel from '/codeFiles/emacsConfFiles/init.el?url&raw';
+import packageel from '/codeFiles/emacsConfFiles/packages.el?url&raw';
+import { ExpressiveCode } from 'astro-expressive-code';
+const pageTitle = "I don't use Vim, wild right?";
+const pageSubHeading = " ";
+---
+
+
+<MainBackgroundLayout pageTitle={pageTitle}>	
+		<p>Weirdly, I don't use Catppuccin for my Emacs colour-scheme, instead I use Doom's version of Tokyo-Night</p>
+
+		<p>Anyway, my config files, put here mostly for me if I am being honest, so that I can easily setup a new system
+			from scratch without <i>that</i> much effort</p>
+		<div class="syntax">
+			<p> First, the <code>init.el</code> and <code>packages.el</code> files:</p>
+			<details open>
+				<summary>
+					<h4 style="display:inline"><code>init.el</code>:</h4>
+				</summary>
+
+				<Code frame="code" code={initel} lang="elisp" />
+				
+			</details>
+
+			<details open>
+				<summary>
+					<h4 style="display:inline"><code>packages.el</code>:</h4>
+				</summary>
+				<Code code={packageel} lang="elisp" />
+			</details>
+
+			<p>... and now, for the one y'all actually came for:</p>
+			<details open>
+				<summary>
+					<h4 style="display:inline"><code>config.el</code>:</h4>
+				</summary>
+				<Code code={configel} lang="elisp" />
+				
+			</details>
+		</div>
+</MainBackgroundLayout>

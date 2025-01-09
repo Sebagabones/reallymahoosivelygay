@@ -1,5 +1,4 @@
-@import "/src/styles/pico.colors.css";
-@import "/src/styles/pico.violet.css";
+@import url(https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.violet.min.css);
 
 @import url(https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css);
 
@@ -21,12 +20,19 @@ html {
     color-scheme: light dark;
 } 
 
+body > header {
+  /* For some reason this only impacts the blog and not my main page so needed a workaround /shrug */
+  padding-block: 0px;
+}
+
 html[data-theme=light] {
     color-scheme: light;
+    
 }
 
 html[data-theme=dark] {
     color-scheme: dark; 
+    
 } 
 
 .topTracksList {
@@ -103,15 +109,15 @@ a:hover {
 }
 
 .blogListPosts  {
-  h6 {
-    color: var(--pico-ctp-sapphire);
-  }
   h4 {
-    color: var(--pico-ctp-sky);
+    color: var(--pico-ctp-mauve);
+  }
+  h6 {
+    color: var(--pico-ctp-lavender);
   }
   p {
     text-decoration: none;
-    color:var(--pico-ctp-lavender);
+    color:var(--pico-ctp-text);
   }
 }
 .blogListPosts:hover {
@@ -211,8 +217,8 @@ ins {
 
 /* Orange color for light color scheme (Default) */
 /* Can be forced with data-theme="light" */
-[data-theme=light],
-:root:not([data-theme=dark]) {
+[data-theme="light"],
+:root:not([data-theme="dark"]) {
   --pico-ctp-rosewater:#dc8a78;
   --pico-ctp-flamingo:#dd7878;
   --pico-ctp-pink:#ea76cb;
@@ -669,7 +675,9 @@ ins {
 
 /* Orange color for dark color scheme (Forced) */
 /* Enabled if forced with data-theme="dark" */
-[data-theme=dark] {
+[data-theme="dark"],
+:root:not([data-theme="light"]) {
+/* [data-theme="dark"] { */
   --pico-ctp-rosewater:#f5e0dc;
   --pico-ctp-flamingo:#f2cdcd;
   --pico-ctp-pink:#f5c2e7;
@@ -813,5 +821,6 @@ ins {
   .syntax .vi { color: #cdd6f4; font-style: italic } /* Name.Variable.Instance */
   .syntax .vm { color: #cdd6f4; font-style: italic } /* Name.Variable.Magic */
   .syntax .il { color: #fab387 } /* Literal.Number.Integer.Long */
+  
 
 }

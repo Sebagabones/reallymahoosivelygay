@@ -1,0 +1,907 @@
+---
+title: 'Writing an asynchronous REST backend to hook into the Spotify API'
+pubDate: 2025-09-01
+description: "Subjecting y'all to my taste in music"
+---
+import { Code } from 'astro-expressive-code/components'
+
+
+I _really_ like music, and even though my taste in music is one that consistently raises eyebrows, I thought I may as well show it off on my website (to be honest, I was very bored and needed something to do).
+
+Anyway, you can view the completed product [here](/spotifySongs) - the frontend for this page was written in pure React by importing it, as at the time my website was written without using a backend or framework (I am planning on redoing this at some point, so this may be outdated by the time you read this).
+
+But, moving onto the main part of this entry - writing the API:
+
+
+I decided to use [Falcon](https://falcon.readthedocs.io/en/stable/), as the framework for the API itself, and I found I liked it quite a lot - that said, this blog post is going to go over the Spotify calls more than using Falcon itself, there are plenty of guides, and the code for this should be on my GitHub.
+
+So, starting at the basics, I needed to get my authorisation codes, and while there are heaps of ways to do this, I found using [this](https://github.com/spotify/web-api-examples/tree/master/authorisation/authorisation_code) to be the easiest way to do it. Once we have our client_id, client_secret, and our refresh token, we can put those into a <ins>.env</ins> file for later.
+I used [dotenvx](https://dotenvx.com/) for a lot of this project while setting it up, so my <ins>.env</ins> looked like this:
+
+```bat frame="code" title=".env"
+SPOTIFY_CLIENT_ID="xxx"
+SPOTIFY_CLIENT_SECRET="xxx"
+SPOTIFY_REFRESH_TOKEN="xxx"
+```
+<br />
+
+So, first things first, reading in our environment variables:
+```py
+async def main():
+    client_id = os.getenv("SPOTIFY_CLIENT_ID", "")
+    client_secret = os.getenv("SPOTIFY_CLIENT_SECRET", "")
+    refresh_token = os.getenv("SPOTIFY_REFRESH_TOKEN","")
+    NOW_PLAYING_ENDPOINT = "https://api.spotify.com/v1/me/player/currently-playing"
+    TOP_TRACKS_ENDPOINT = "https://api.spotify.com/v1/me/top/tracks"
+    TOKEN_ENDPOINT = "https://accounts.spotify.com/api/token"
+    AUDIO_FEATURES_ENDPOINT = "https://api.spotify.com/v1/audio-features"
+    
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+<br />
+
+Now, because our access tokens will expire, we use our refresh token to get new access tokens. We do this by sending an authorised request to the <ins>TOKEN_ENDPOINT</ins>.
+To authorise this, we attach a base64 encoded copy of our client_id:client_secret to our header, which as it will be used a few times, we assign to the variable <ins>basic</ins>:
+
+```py
+basic = base64.b64encode(bytes(f"{client_id}:{client_secret}", 'utf-8')).decode('utf-8')
+```
+<br />
+We also need to attach our refresh_token to request url, and so, our function for getting a new refresh_token is:
+
+```py
+async def getAccessToken(refresh_token, basic, TOKEN_ENDPOINT):
+    data = {
+        "grant_type": "refresh_token",
+        "refresh_token": refresh_token
+    }
+    headers = {
+        "Authorization": f"Basic {basic}",
+        'Content-Type': 'application/x-www-form-urlencoded',
+    }
+    response =  await asyncio.to_thread(requests.post, TOKEN_ENDPOINT, params=data, headers=headers )
+    return(response.json()['access_token'])
+
+accessTokenTask = asyncio.create_task(getAccessToken(refresh_token, basic, TOKEN_ENDPOINT))
+accessToken = await accessTokenTask
+```
+<br />
+
+Cool! We now have our access_token - now what? Well, now we can make requests to the Spotify API - let's start with getting the current song playing.
+
+```py
+async def nowPlayingJSON(accessToken, nowPlayingEndpoint):
+    headers = {
+        "Authorization": f"Bearer {accessToken}",
+        }
+
+    response =  await asyncio.to_thread(requests.get, nowPlayingEndpoint, headers=headers )
+    print(response.status_code)
+    return(response.json())
+
+nowPlayingJsonTask = asyncio.create_task(nowPlayingJSON(accessToken, NOW_PLAYING_ENDPOINT))
+nowPlayingJson = await nowPlayingJsonTask
+```
+<br />
+This should hopefully make sense - we are sending an authorised request to the nowPlayingEndpoint, and getting back a JSON response - we can do similar to get my top twenty songs.
+```py
+async def topTracksJSON(accessToken, topTracksEndpoint):
+    headers = {
+        "Authorization": f"Bearer {accessToken}",
+        }
+
+    response =  await asyncio.to_thread(requests.get, topTracksEndpoint, headers=headers )
+    return(response.json())
+
+topTracksJsonTask = asyncio.create_task(topTracksJSON(accessToken, TOP_TRACKS_ENDPOINT))
+topTracksJson = await topTracksJsonTask
+```
+
+Cool! That is a super simple way to call the Spotify API - you can, as I did, extend this considerably - but, if you put everything together like so, we have a start to build off:
+```py title=main.py
+#!/usr/bin/env python3
+import requests
+import os
+import base64
+import asyncio
+
+
+async def getAccessToken(refresh_token, basic, TOKEN_ENDPOINT):
+    data = {
+        "grant_type": "refresh_token",
+        "refresh_token": refresh_token
+    }
+    headers = {
+        "Authorization": f"Basic {basic}",
+        'Content-Type': 'application/x-www-form-urlencoded',
+    }
+
+    response = await asyncio.to_thread(requests.post, TOKEN_ENDPOINT, params=data, headers=headers )
+    return(response.json()['access_token'])
+
+async def nowPlayingJSON(accessToken, nowPlayingEndpoint):
+    headers = {
+        "Authorization": f"Bearer {accessToken}",
+        }
+
+    response =  await asyncio.to_thread(requests.get, nowPlayingEndpoint, headers=headers )
+    print(f"status code: {response.status_code}")
+    return(response.json())
+
+async def topTracksJSON(accessToken, topTracksEndpoint):
+    headers = {
+        "Authorization": f"Bearer {accessToken}",
+        }
+
+    response = await asyncio.to_thread(requests.get, topTracksEndpoint, headers=headers )
+    return(response.json())
+
+async def main():
+
+    client_id = os.getenv("SPOTIFY_CLIENT_ID", "")
+    client_secret = os.getenv("SPOTIFY_CLIENT_SECRET", "")
+    refresh_token = os.getenv("SPOTIFY_REFRESH_TOKEN","")
+    NOW_PLAYING_ENDPOINT = "https://api.spotify.com/v1/me/player/currently-playing"
+    TOP_TRACKS_ENDPOINT = "https://api.spotify.com/v1/me/top/tracks"
+    TOKEN_ENDPOINT = "https://accounts.spotify.com/api/token"
+
+    basic = base64.b64encode(bytes(f"{client_id}:{client_secret}", 'utf-8')).decode('utf-8')
+
+    accessTokenTask = asyncio.create_task(getAccessToken(refresh_token, basic, TOKEN_ENDPOINT))
+    accessToken = await accessTokenTask
+
+    nowPlayingJsonTask = asyncio.create_task(nowPlayingJSON(accessToken, NOW_PLAYING_ENDPOINT))
+    topTracksJsonTask = asyncio.create_task(topTracksJSON(accessToken, TOP_TRACKS_ENDPOINT))
+
+    nowPlayingJson, topTracksJson = await asyncio.gather(nowPlayingJsonTask, topTracksJsonTask)
+
+    trackName = nowPlayingJson['item']['name']
+
+    print(f"I am currently listening to {trackName}, and my top twenty songs are:")
+    for song in topTracksJson['items']:
+        print(song['name'])
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
+```
+<br />
+Provided you have your <ins>.env</ins> file setup correctly, you should be able to run the above code like so:
+```nu
+dotenvx run -- python3 main.py
+```
+<br />
+
+Okay, so now that we have the basics setup, time to do the actual API - I used Uvicorn as the webserver (as I needed it to be ASGI to work with how I setup Falcon). The below code is my finished setup, it doesn't do much more than the above example, aside from listening for and responding to requests, and modifying the JSON as I did not need to pass all the information given by the Spotify API through to my website.
+This does not use dotenvx, instead it uses the python dotenv package, purely as it was easier for me to deploy it - although using dotenvx is totally okay.
+```py
+#!/usr/bin/env python3
+import requests
+import os
+import base64
+import asyncio
+import falcon
+import falcon.asgi
+import json
+from falcon_limiter import AsyncLimiter
+from falcon_limiter.utils import get_remote_addr
+from dotenv import load_dotenv
+
+load_dotenv()  # take environment variables from .env.
+
+limiter = AsyncLimiter(
+    key_func=get_remote_addr,
+    default_limits="2 per second"
+)
+responseCacheNowPlaying = {}
+responseCacheTopTracks = {}
+async def cleanJson(responseIn): # Cleans Track Object
+        jsonIn = responseIn.json()['item']
+        newValues = {}
+        newValues.update({"songName":jsonIn['name']})
+        newValues.update({"artist":jsonIn['artists'][0]['name']})
+        newValues.update({"urlToSong":jsonIn['external_urls']['spotify']})
+        newValues.update({"id":jsonIn['id']})
+        newValues.update({"images":jsonIn['album']['images']})
+        return(newValues)
+
+
+async def cleanDict(jsonIn): # Cleans Track Object
+        newValues = {}
+        newValues.update({"songName":jsonIn['name']})
+        newValues.update({"artist":jsonIn['artists'][0]['name']})
+        newValues.update({"urlToSong":jsonIn['external_urls']['spotify']})
+        newValues.update({"id":jsonIn['id']})
+        newValues.update({"images":jsonIn['album']['images']})
+        return(newValues)
+
+
+async def getAccessToken(refresh_token, basic, TOKEN_ENDPOINT):
+    data = {
+        "grant_type": "refresh_token",
+        "refresh_token": refresh_token
+    }
+    headers = {
+        "Authorization": f"Basic {basic}",
+        'Content-Type': 'application/x-www-form-urlencoded',
+    }
+
+    response =  await asyncio.to_thread(requests.post, TOKEN_ENDPOINT, params=data, headers=headers )
+    if response.status_code == 200:
+        return(response.json()['access_token'])
+    else:
+        return("Error")
+
+
+@limiter.limit()
+class nowPlayingResource:
+    def __init__(self, client_id, client_secret, refresh_token, NOW_PLAYING_ENDPOINT, TOKEN_ENDPOINT): #
+        self.client_id = client_id
+        self.client_secret = client_secret
+        self.refresh_token = refresh_token
+        self.nowPlayingEndpoint = NOW_PLAYING_ENDPOINT
+        self.tokenEndpoint = TOKEN_ENDPOINT
+
+    async def nowPlayingJSON(self):
+        basic = base64.b64encode(bytes(f"{self.client_id}:{self.client_secret}", 'utf-8')).decode('utf-8')
+        global responseCacheNowPlaying
+        accessToken = await getAccessToken(self.refresh_token, basic, self.tokenEndpoint)
+        if(accessToken != "Error"):
+            headers = {
+                "Authorization": f"Bearer {accessToken}",
+            }
+            response =  await asyncio.to_thread(requests.get, self.nowPlayingEndpoint, headers=headers )
+            if response.status_code == 200:
+                responseCacheNowPlaying = response
+                return(response)
+            elif response.status_code == 204:
+                    return("204")
+            elif response.status_code == 429:
+                    return(responseCacheNowPlaying)
+            else:
+                return("Error")
+        else:
+            return(responseCacheNowPlaying)
+
+    async def currentlyPlayingBool(self, jsonIn):
+        return (jsonIn.json()['is_playing'])
+
+    async def on_get(self, req, resp):
+        resp.status = falcon.HTTP_200  # This is the default status
+        getNowPlayingTask = asyncio.create_task(self.nowPlayingJSON())
+        nowPlaying = await getNowPlayingTask
+        if(nowPlaying == "Error"):
+            return("Error collecting now playing")
+        elif nowPlaying == "204":
+                textToRespond = {"isPlaying": "false"}
+        else:
+                isCurrentlyPlayingTask = asyncio.create_task(self.currentlyPlayingBool(nowPlaying))
+                jsonCleanedTask =  asyncio.create_task(cleanJson(nowPlaying)) #
+
+                textToRespond = "whoops something broke"
+
+                await isCurrentlyPlayingTask
+                if await isCurrentlyPlayingTask:
+                        textToRespond = await jsonCleanedTask
+                        textToRespond.update({"isPlaying": "true"})
+                else:
+                        textToRespond = {"isPlaying": "false"}
+        
+        resp.text = json.dumps(textToRespond)
+
+
+#Now to do top Tracks:
+@limiter.limit()
+class topTracksResource:
+    def __init__(self, client_id, client_secret, refresh_token, TOP_TRACKS_ENDPOINT, TOKEN_ENDPOINT):
+        self.client_id = client_id
+        self.client_secret = client_secret
+        self.refresh_token = refresh_token
+        self.topTracksEndpoint = TOP_TRACKS_ENDPOINT
+        self.tokenEndpoint = TOKEN_ENDPOINT
+
+    async def topTracksJSON(self):
+        basic = base64.b64encode(bytes(f"{self.client_id}:{self.client_secret}", 'utf-8')).decode('utf-8')
+        global responseCacheTopTracks
+        accessToken = await getAccessToken(self.refresh_token, basic, self.tokenEndpoint)
+        if(accessToken != "Error"):
+            headers = {
+                "Authorization": f"Bearer {accessToken}",
+            }
+            response =  await asyncio.to_thread(requests.get, self.topTracksEndpoint, headers=headers )
+            if response.status_code == 200:
+                responseCacheTopTracks = response
+                return(response)
+            elif response.status_code == 429:
+                return(responseCacheTopTracks)
+            else:
+                return("Error")
+        else:
+            return(responseCacheTopTracks)
+
+    async def on_get(self, req, resp):
+        resp.status = falcon.HTTP_200  # This is the default status
+        getTopTracksTask = asyncio.create_task(self.topTracksJSON())
+        getTopTracks = await getTopTracksTask
+
+        textToRespond = "whoops something broke"
+
+        if(getTopTracksTask.result() == "Error"):
+            return("Error collecting top tracks")
+
+        # Will want to parse each returned track into its own jsonCleanedFile
+        tasks = [asyncio.create_task(cleanDict(song)) for song in getTopTracks.json()['items']]
+
+
+        listOfSongs = []
+        songNumber = 0
+        for task in asyncio.as_completed(tasks):
+            # get task result
+            result = await task
+            result.update({"songRankNumber":songNumber})
+            # report result
+            listOfSongs.append(result)
+            songNumber += 1
+
+        textToRespond = listOfSongs
+        resp.text = json.dumps(textToRespond)
+
+
+client_id = os.getenv("SPOTIFY_CLIENT_ID", "")
+client_secret = os.getenv("SPOTIFY_CLIENT_SECRET", "")
+refresh_token = os.getenv("SPOTIFY_REFRESH_TOKEN","")
+
+NOW_PLAYING_ENDPOINT = "https://api.spotify.com/v1/me/player/currently-playing"
+TOP_TRACKS_ENDPOINT = "https://api.spotify.com/v1/me/top/tracks"
+TOKEN_ENDPOINT = "https://accounts.spotify.com/api/token"
+
+app = falcon.asgi.App(cors_enable=True, middleware=limiter.middleware)
+
+nowPlaying = nowPlayingResource(client_id, client_secret, refresh_token, NOW_PLAYING_ENDPOINT, TOKEN_ENDPOINT)
+app.add_route('/getNowPlaying', nowPlaying)
+
+topTracks = topTracksResource(client_id, client_secret, refresh_token, TOP_TRACKS_ENDPOINT, TOKEN_ENDPOINT)
+app.add_route('/getTopTracks', topTracks)
+```
+<br />
+
+You will need to add a few packages from pip to run this, however once you have, you can start the webserver with:
+```nu
+uvicorn main_asgi:app
+```
+<br />
+
+Now, if we send a request to it:
+```nu
+curl localhost:8000/getNowPlaying
+```
+<br />
+
+We should get a response like this:
+```json
+{
+  "songName": "Red Flags And Long Nights",
+  "artist": "She Wants Revenge",
+  "urlToSong": "https://open.spotify.com/track/7H33tTNHIVUxPQQGUkmJaB",
+  "id": "7H33tTNHIVUxPQQGUkmJaB",
+  "images": [
+    {
+      "height": 640,
+      "url": "https://i.scdn.co/image/ab67616d0000b273717f38200c8370df83f6364b",
+      "width": 640
+    },
+    {
+      "height": 300,
+      "url": "https://i.scdn.co/image/ab67616d00001e02717f38200c8370df83f6364b",
+      "width": 300
+    },
+    {
+      "height": 64,
+      "url": "https://i.scdn.co/image/ab67616d00004851717f38200c8370df83f6364b",
+      "width": 64
+    }
+  ],
+  "isPlaying": "true"
+}
+```
+<br />
+
+You should get a response for <ins>localhost:8000/getTopTracks</ins>, which should be in a similar format as <ins>getNowPlaying</ins>
+<details>
+<summary>
+<h6><a style="text-decoration:none">Click here to show an example response for getTopTracks</a></h6>
+</summary>
+```json
+[
+  {
+    "songName": "DON'T!",
+    "artist": "LØLØ",
+    "urlToSong": "https://open.spotify.com/track/6oIW5g7RHZtok3cjF2nePu",
+    "id": "6oIW5g7RHZtok3cjF2nePu",
+    "images": [
+      {
+        "height": 640,
+        "url": "https://i.scdn.co/image/ab67616d0000b273463b3ec06fcc0f8d270485cc",
+        "width": 640
+      },
+      {
+        "height": 300,
+        "url": "https://i.scdn.co/image/ab67616d00001e02463b3ec06fcc0f8d270485cc",
+        "width": 300
+      },
+      {
+        "height": 64,
+        "url": "https://i.scdn.co/image/ab67616d00004851463b3ec06fcc0f8d270485cc",
+        "width": 64
+      }
+    ],
+    "songRankNumber": 0
+  },
+  {
+    "songName": "Psycho Dreams - Hardstyle",
+    "artist": "Asentrix",
+    "urlToSong": "https://open.spotify.com/track/6VrhCVwFWegUKvEb5ve7JS",
+    "id": "6VrhCVwFWegUKvEb5ve7JS",
+    "images": [
+      {
+        "height": 640,
+        "url": "https://i.scdn.co/image/ab67616d0000b273f6b7988b0220bcb2951edbaa",
+        "width": 640
+      },
+      {
+        "height": 300,
+        "url": "https://i.scdn.co/image/ab67616d00001e02f6b7988b0220bcb2951edbaa",
+        "width": 300
+      },
+      {
+        "height": 64,
+        "url": "https://i.scdn.co/image/ab67616d00004851f6b7988b0220bcb2951edbaa",
+        "width": 64
+      }
+    ],
+    "songRankNumber": 1
+  },
+  {
+    "songName": "I Don't Want To Fall In Love",
+    "artist": "She Wants Revenge",
+    "urlToSong": "https://open.spotify.com/track/5ZXxex1PzjiIhmjAI7nIDL",
+    "id": "5ZXxex1PzjiIhmjAI7nIDL",
+    "images": [
+      {
+        "height": 640,
+        "url": "https://i.scdn.co/image/ab67616d0000b273717f38200c8370df83f6364b",
+        "width": 640
+      },
+      {
+        "height": 300,
+        "url": "https://i.scdn.co/image/ab67616d00001e02717f38200c8370df83f6364b",
+        "width": 300
+      },
+      {
+        "height": 64,
+        "url": "https://i.scdn.co/image/ab67616d00004851717f38200c8370df83f6364b",
+        "width": 64
+      }
+    ],
+    "songRankNumber": 2
+  },
+  {
+    "songName": "Lump",
+    "artist": "The Presidents Of The United States Of America",
+    "urlToSong": "https://open.spotify.com/track/02ZdZqhpfrPnxwyakXgxB8",
+    "id": "02ZdZqhpfrPnxwyakXgxB8",
+    "images": [
+      {
+        "height": 640,
+        "url": "https://i.scdn.co/image/ab67616d0000b273f26fe2d28f3ea184db9be5a2",
+        "width": 640
+      },
+      {
+        "height": 300,
+        "url": "https://i.scdn.co/image/ab67616d00001e02f26fe2d28f3ea184db9be5a2",
+        "width": 300
+      },
+      {
+        "height": 64,
+        "url": "https://i.scdn.co/image/ab67616d00004851f26fe2d28f3ea184db9be5a2",
+        "width": 64
+      }
+    ],
+    "songRankNumber": 3
+  },
+  {
+    "songName": "War Dreams Of Itself",
+    "artist": "The Smashing Pumpkins",
+    "urlToSong": "https://open.spotify.com/track/2WHioHWgk9s0SzSOHAe70S",
+    "id": "2WHioHWgk9s0SzSOHAe70S",
+    "images": [
+      {
+        "height": 640,
+        "url": "https://i.scdn.co/image/ab67616d0000b273f20789265ff7f79b54cb218d",
+        "width": 640
+      },
+      {
+        "height": 300,
+        "url": "https://i.scdn.co/image/ab67616d00001e02f20789265ff7f79b54cb218d",
+        "width": 300
+      },
+      {
+        "height": 64,
+        "url": "https://i.scdn.co/image/ab67616d00004851f20789265ff7f79b54cb218d",
+        "width": 64
+      }
+    ],
+    "songRankNumber": 4
+  },
+  {
+    "songName": "We Fell Apart - Slowed",
+    "artist": "ANGUISH",
+    "urlToSong": "https://open.spotify.com/track/2vsFAkp6P14vOjvmLdnBkb",
+    "id": "2vsFAkp6P14vOjvmLdnBkb",
+    "images": [
+      {
+        "height": 640,
+        "url": "https://i.scdn.co/image/ab67616d0000b27308ce7b86e3a0b0278d75d3e9",
+        "width": 640
+      },
+      {
+        "height": 300,
+        "url": "https://i.scdn.co/image/ab67616d00001e0208ce7b86e3a0b0278d75d3e9",
+        "width": 300
+      },
+      {
+        "height": 64,
+        "url": "https://i.scdn.co/image/ab67616d0000485108ce7b86e3a0b0278d75d3e9",
+        "width": 64
+      }
+    ],
+    "songRankNumber": 5
+  },
+  {
+    "songName": "Mansion World",
+    "artist": "Deadsy",
+    "urlToSong": "https://open.spotify.com/track/6MQaptqw9EwpQB4qnNfRr8",
+    "id": "6MQaptqw9EwpQB4qnNfRr8",
+    "images": [
+      {
+        "height": 640,
+        "url": "https://i.scdn.co/image/ab67616d0000b27308d1ca2926b466dc598d301e",
+        "width": 640
+      },
+      {
+        "height": 300,
+        "url": "https://i.scdn.co/image/ab67616d00001e0208d1ca2926b466dc598d301e",
+        "width": 300
+      },
+      {
+        "height": 64,
+        "url": "https://i.scdn.co/image/ab67616d0000485108d1ca2926b466dc598d301e",
+        "width": 64
+      }
+    ],
+    "songRankNumber": 6
+  },
+  {
+    "songName": "I Don't Care",
+    "artist": "Apocalyptica",
+    "urlToSong": "https://open.spotify.com/track/1WxF4gMsFXnKCyh48CW2RI",
+    "id": "1WxF4gMsFXnKCyh48CW2RI",
+    "images": [
+      {
+        "height": 640,
+        "url": "https://i.scdn.co/image/ab67616d0000b27329e90501a1ea82739e39da5f",
+        "width": 640
+      },
+      {
+        "height": 300,
+        "url": "https://i.scdn.co/image/ab67616d00001e0229e90501a1ea82739e39da5f",
+        "width": 300
+      },
+      {
+        "height": 64,
+        "url": "https://i.scdn.co/image/ab67616d0000485129e90501a1ea82739e39da5f",
+        "width": 64
+      }
+    ],
+    "songRankNumber": 7
+  },
+  {
+    "songName": "She Likes Big Words",
+    "artist": "Deadsy",
+    "urlToSong": "https://open.spotify.com/track/2XZTNfo1rZocrepM4BhAci",
+    "id": "2XZTNfo1rZocrepM4BhAci",
+    "images": [
+      {
+        "height": 640,
+        "url": "https://i.scdn.co/image/ab67616d0000b27308d1ca2926b466dc598d301e",
+        "width": 640
+      },
+      {
+        "height": 300,
+        "url": "https://i.scdn.co/image/ab67616d00001e0208d1ca2926b466dc598d301e",
+        "width": 300
+      },
+      {
+        "height": 64,
+        "url": "https://i.scdn.co/image/ab67616d0000485108d1ca2926b466dc598d301e",
+        "width": 64
+      }
+    ],
+    "songRankNumber": 8
+  },
+  {
+    "songName": "Von dutch",
+    "artist": "Charli xcx",
+    "urlToSong": "https://open.spotify.com/track/3Y1EvIgEVw51XtgNEgpz5c",
+    "id": "3Y1EvIgEVw51XtgNEgpz5c",
+    "images": [
+      {
+        "height": 640,
+        "url": "https://i.scdn.co/image/ab67616d0000b27388e3822cccfb8f2832c70c2e",
+        "width": 640
+      },
+      {
+        "height": 300,
+        "url": "https://i.scdn.co/image/ab67616d00001e0288e3822cccfb8f2832c70c2e",
+        "width": 300
+      },
+      {
+        "height": 64,
+        "url": "https://i.scdn.co/image/ab67616d0000485188e3822cccfb8f2832c70c2e",
+        "width": 64
+      }
+    ],
+    "songRankNumber": 9
+  },
+  {
+    "songName": "Tainted Love",
+    "artist": "Marilyn Manson",
+    "urlToSong": "https://open.spotify.com/track/0ZeKQudydO2uQJpfr6gNC8",
+    "id": "0ZeKQudydO2uQJpfr6gNC8",
+    "images": [
+      {
+        "height": 640,
+        "url": "https://i.scdn.co/image/ab67616d0000b273dcca264f538d015a1c9733a5",
+        "width": 640
+      },
+      {
+        "height": 300,
+        "url": "https://i.scdn.co/image/ab67616d00001e02dcca264f538d015a1c9733a5",
+        "width": 300
+      },
+      {
+        "height": 64,
+        "url": "https://i.scdn.co/image/ab67616d00004851dcca264f538d015a1c9733a5",
+        "width": 64
+      }
+    ],
+    "songRankNumber": 10
+  },
+  {
+    "songName": "Broken Promises For Broken Hearts",
+    "artist": "She Wants Revenge",
+    "urlToSong": "https://open.spotify.com/track/14ARi904D5rL4lzUwN0SMY",
+    "id": "14ARi904D5rL4lzUwN0SMY",
+    "images": [
+      {
+        "height": 640,
+        "url": "https://i.scdn.co/image/ab67616d0000b273717f38200c8370df83f6364b",
+        "width": 640
+      },
+      {
+        "height": 300,
+        "url": "https://i.scdn.co/image/ab67616d00001e02717f38200c8370df83f6364b",
+        "width": 300
+      },
+      {
+        "height": 64,
+        "url": "https://i.scdn.co/image/ab67616d00004851717f38200c8370df83f6364b",
+        "width": 64
+      }
+    ],
+    "songRankNumber": 11
+  },
+  {
+    "songName": "Pink Pony Club",
+    "artist": "Chappell Roan",
+    "urlToSong": "https://open.spotify.com/track/1k2pQc5i348DCHwbn5KTdc",
+    "id": "1k2pQc5i348DCHwbn5KTdc",
+    "images": [
+      {
+        "height": 640,
+        "url": "https://i.scdn.co/image/ab67616d0000b27396fa88fb1789be437d5cb4b6",
+        "width": 640
+      },
+      {
+        "height": 300,
+        "url": "https://i.scdn.co/image/ab67616d00001e0296fa88fb1789be437d5cb4b6",
+        "width": 300
+      },
+      {
+        "height": 64,
+        "url": "https://i.scdn.co/image/ab67616d0000485196fa88fb1789be437d5cb4b6",
+        "width": 64
+      }
+    ],
+    "songRankNumber": 12
+  },
+  {
+    "songName": "Mr & Mrs Human Race",
+    "artist": "Seb Lowe",
+    "urlToSong": "https://open.spotify.com/track/59wdpUXTIqqx22BDqNqESu",
+    "id": "59wdpUXTIqqx22BDqNqESu",
+    "images": [
+      {
+        "height": 640,
+        "url": "https://i.scdn.co/image/ab67616d0000b2737c38bdbcc608768a50a48e86",
+        "width": 640
+      },
+      {
+        "height": 300,
+        "url": "https://i.scdn.co/image/ab67616d00001e027c38bdbcc608768a50a48e86",
+        "width": 300
+      },
+      {
+        "height": 64,
+        "url": "https://i.scdn.co/image/ab67616d000048517c38bdbcc608768a50a48e86",
+        "width": 64
+      }
+    ],
+    "songRankNumber": 13
+  },
+  {
+    "songName": "Pressure (feat. UCLA Bruin Marching Band)",
+    "artist": "Muse",
+    "urlToSong": "https://open.spotify.com/track/1DqoQsvOtn23gDx6Up6cX5",
+    "id": "1DqoQsvOtn23gDx6Up6cX5",
+    "images": [
+      {
+        "height": 640,
+        "url": "https://i.scdn.co/image/ab67616d0000b2734cb163c1d111f77307c842b6",
+        "width": 640
+      },
+      {
+        "height": 300,
+        "url": "https://i.scdn.co/image/ab67616d00001e024cb163c1d111f77307c842b6",
+        "width": 300
+      },
+      {
+        "height": 64,
+        "url": "https://i.scdn.co/image/ab67616d000048514cb163c1d111f77307c842b6",
+        "width": 64
+      }
+    ],
+    "songRankNumber": 14
+  },
+  {
+    "songName": "Monologue",
+    "artist": "She Wants Revenge",
+    "urlToSong": "https://open.spotify.com/track/2Mf7QU6Lp19uymNQsmmmet",
+    "id": "2Mf7QU6Lp19uymNQsmmmet",
+    "images": [
+      {
+        "height": 640,
+        "url": "https://i.scdn.co/image/ab67616d0000b273717f38200c8370df83f6364b",
+        "width": 640
+      },
+      {
+        "height": 300,
+        "url": "https://i.scdn.co/image/ab67616d00001e02717f38200c8370df83f6364b",
+        "width": 300
+      },
+      {
+        "height": 64,
+        "url": "https://i.scdn.co/image/ab67616d00004851717f38200c8370df83f6364b",
+        "width": 64
+      }
+    ],
+    "songRankNumber": 15
+  },
+  {
+    "songName": "Medicate Me",
+    "artist": "Davey Suicide",
+    "urlToSong": "https://open.spotify.com/track/5y2aBi3vXTCH482nH6Aq58",
+    "id": "5y2aBi3vXTCH482nH6Aq58",
+    "images": [
+      {
+        "height": 640,
+        "url": "https://i.scdn.co/image/ab67616d0000b2732063a9042b45546f9ba65347",
+        "width": 640
+      },
+      {
+        "height": 300,
+        "url": "https://i.scdn.co/image/ab67616d00001e022063a9042b45546f9ba65347",
+        "width": 300
+      },
+      {
+        "height": 64,
+        "url": "https://i.scdn.co/image/ab67616d000048512063a9042b45546f9ba65347",
+        "width": 64
+      }
+    ],
+    "songRankNumber": 16
+  },
+  {
+    "songName": "Spare Me The Details",
+    "artist": "The Offspring",
+    "urlToSong": "https://open.spotify.com/track/0UoLzMwfAXWuIhcbHWqdcx",
+    "id": "0UoLzMwfAXWuIhcbHWqdcx",
+    "images": [
+      {
+        "height": 640,
+        "url": "https://i.scdn.co/image/ab67616d0000b273865f58bf044f00b5b8a631cb",
+        "width": 640
+      },
+      {
+        "height": 300,
+        "url": "https://i.scdn.co/image/ab67616d00001e02865f58bf044f00b5b8a631cb",
+        "width": 300
+      },
+      {
+        "height": 64,
+        "url": "https://i.scdn.co/image/ab67616d00004851865f58bf044f00b5b8a631cb",
+        "width": 64
+      }
+    ],
+    "songRankNumber": 17
+  },
+  {
+    "songName": "Ok, But This Is The Last Time",
+    "artist": "The Offspring",
+    "urlToSong": "https://open.spotify.com/track/1KCrRm4W8OEVkndY7huL6I",
+    "id": "1KCrRm4W8OEVkndY7huL6I",
+    "images": [
+      {
+        "height": 640,
+        "url": "https://i.scdn.co/image/ab67616d0000b273865f58bf044f00b5b8a631cb",
+        "width": 640
+      },
+      {
+        "height": 300,
+        "url": "https://i.scdn.co/image/ab67616d00001e02865f58bf044f00b5b8a631cb",
+        "width": 300
+      },
+      {
+        "height": 64,
+        "url": "https://i.scdn.co/image/ab67616d00004851865f58bf044f00b5b8a631cb",
+        "width": 64
+      }
+    ],
+    "songRankNumber": 18
+  },
+  {
+    "songName": "The Fall Guy",
+    "artist": "The Offspring",
+    "urlToSong": "https://open.spotify.com/track/7wYcrI8XWv6QYoUBLa1hTe",
+    "id": "7wYcrI8XWv6QYoUBLa1hTe",
+    "images": [
+      {
+        "height": 640,
+        "url": "https://i.scdn.co/image/ab67616d0000b273865f58bf044f00b5b8a631cb",
+        "width": 640
+      },
+      {
+        "height": 300,
+        "url": "https://i.scdn.co/image/ab67616d00001e02865f58bf044f00b5b8a631cb",
+        "width": 300
+      },
+      {
+        "height": 64,
+        "url": "https://i.scdn.co/image/ab67616d00004851865f58bf044f00b5b8a631cb",
+        "width": 64
+      }
+    ],
+    "songRankNumber": 19
+  }
+]
+```
+</details>
+<br />
+
+##### Why did I implement my own REST API?
+Well, when I wrote this my website was not using a framework, as I wanted to see how far I could go with using plain HTML/CSS/JS while using Apache as a webserver (I love a LAMP stack). 
+So, instead of writing a nice React API that ran with the webserver, I had to do something else, and to make sure I kept my secret keys, well, secret, I setup a simple REST API that does not require Authentication, but can only access what I am currently playing, and my top twenty songs.
+
+##### Why asynchronous?
+Because it was fun - I enjoy writing asynchronous code lol.

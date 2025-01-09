@@ -1,0 +1,43 @@
+---
+
+import MainBackgroundLayout from "../layouts/MainBackgroundLayout.astro"
+import type { CollectionEntry } from 'astro:content'
+import { getCollection } from "astro:content";
+import BlogPost from "../components/BlogPost.astro";
+import Footer from "../components/footer.astro";
+const pageTitle = "A collection of my various projects...";
+const pageSubHeading = '...and my ramblings about them';
+const allPosts = (
+  await getCollection(
+    'blog',
+  )
+).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+---
+
+<MainBackgroundLayout pageTitle={pageTitle}, pageSubHeading={pageSubHeading}>
+	<div class="WelcomePara">
+		<p>Heya! I decided I should probably make a more ordered way of discussing my different projects, instead of linking them all over my website, which isn't (wasn't?) particularly useful for finding information:</p>
+	</div>
+
+    <div class="divWrappingPostsList">        
+		{
+			allPosts.map((post) => (
+			<BlogPost post={post}/>
+		))
+		
+		}
+		<script define:vars={{allPosts}}>console.log(allPosts.sort())</script>
+		</div>
+	
+</MainBackgroundLayout>
+
+<style>
+	.WelcomePara {
+		padding-top: 3vh;
+	}
+
+    .divWrappingPostsList{
+        padding-top:3vh ;
+    }
+</style>

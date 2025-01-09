@@ -1,0 +1,99 @@
+---
+title: 'Continually updating my Emacs configuration to my website'
+pubDate: 2024-12-28
+description: 'ie. Creating overly complex solutions to an unnecessary problem'
+---
+import ssriRun from '/codeFiles/rakeFiles/ssriRun.rake?url&raw'
+import cpPreSSRI from '/codeFiles/rakeFiles/cpPreSSRI.rake?url&raw'
+import gitCommit from '/codeFiles/rakeFiles/gitCommit.rake?url&raw'
+import pygments from '/codeFiles/rakeFiles/pygments.rake?url&raw'
+import uptime from '/codeFiles/rakeFiles/uptime.rake?url&raw'
+import hooks from '/codeFiles/rakeFiles/hooks.rake?url&raw'
+import { Code } from 'astro-expressive-code/components'
+
+
+___The below is now a bit outdated, as I switched to using Astro as a framework, so I will do a post up on my current solution, but will keep this as an example of how it was done.___
+
+As you may hopefully have seen, I have my Emacs configuration files on my website if not, well, they are [here](/emacsFiles).
+
+Because I have a thing about making things look nice, I had to have syntax highlighting for these, and I had to have these match my website's colourscheme (which is of course based off of Catppuccin). I also wanted this to work without JavaScript, and so I decided to use Pygments.
+
+##### Pygments
+Pygments allowed me to generate a css style for the different styles I wanted to use (Catppuccin's Latte and Mocha), which once added to my css file, does not need any updating. 
+This simply just defines a bunch of colours for different classnames for spans in a parent div - to generate the css styles simply run: 
+``` nu
+pygmentize -f html -S catppuccin-style -a .syntax
+```
+<br />
+where <code>catppuccin-style</code> was either <ins>catppuccin-mocha</ins> or <ins>catppuccin-latte</ins> dependng if I was generating the css for the light or dark mode.
+
+For example, below you can see what an example of span class definition is, here the comment class is being defined:
+``` css
+ .syntax .c { color: #7c7f93 } /* Comment */
+```
+<br />
+And then here you can see the actual HTML code provided by Pygments to display the above example (you do not want to know what the code to display the below example is):
+
+```html
+<div class="syntax"><pre>
+<span class="w">  </span><span class="p">.</span><span class="nc">syntax</span><span class="w"> </span><span class="p">.</span><span class="nc">c</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">color</span><span class="p">:</span><span class="w"> </span><span class="mh">#7c7f93</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="c">/* Comment */</span>
+</pre></div>
+```
+<br />
+As you can see by the second example, this would be very unfun to do by hand.
+Thankfully, Pygments supports a lot of languages, and so I can simply pass in my <ins>*.el</ins> files, and have Pygments output the HTML version of them. 
+The command I used for this was:
+``` nu
+pygmentize example.el -O cssclass=syntax -o example.el.html
+```
+<br />
+##### SSRI
+
+Here is where [SSRI](/ssri) comes in - I did not want to setup some janky regex to update the <ins>emacsConfig.html</ins> file (yes, I have read this [classic](https://stackoverflow.com/questions/1732348/regex-match-open-tags-except-xhtml-self-contained-tags))
+everytime I changed my config files (which, being an Emacs user, is about every two minutes). So, yes, to
+make sure my config files are updated on my website I went away and built a templating engine - good use of
+my time, 10/10 would recommend.
+
+##### Recap so far
+Okay, so currently we have covered that I needed to generate HTML files from my <ins>*.el</ins> files with Pygments, and then include them in my website using SSRI.
+Seems pretty simply, you could just do a git repo for your Emacs files and write a small script to run pygments on each file in there, and then link those to your website somehow.
+And like, I could do that, but that wouldn't have been as fun.
+
+##### Capistrano
+What if, instead of doing that, I used Capistrano to automatically deploy my Emacs config files to my webserver, and then to build the new <ins>*.el.html</ins> files, and then rerun SSRI to automatically update my Emacs configuration files with a single command? 
+So I did that, turns out Rake files are weird and wild beasts, but I kind of like them (along with ruby) now lol.
+
+###### Workflow
+Initially we should cover all of my hooks, which are built off of using the Capistrano deploy hooks:
+<Code frame="code" code={hooks} lang="ruby" title="hooks.rake" />
+<br />
+The first thing that I want to happen when I run 
+```nu
+bundle exec cap Prod deploy
+```
+<br />
+is to check the uptime of my webserver, mostly so I can see if I should update and reboot it. 
+So, before starting a deployment the <ins>:uptime</ins> task runs:
+
+<Code frame="code" code={uptime} lang="ruby" title="uptime.rake" />
+<br />
+The next step is to commit and push any changes to the config files (and any Capistrano files) to the remote git repo, so the <ins>:gitpush</ins> task is run, which creates a commit with any changes, with the commit message being the current time, and then pushes to the remote repo.
+
+<Code frame="code" code={gitCommit} lang="ruby" title="gitCommit.rake" />
+<br />
+Now for the fun part, where we actually deploy the files - we wait until after the <ins>deploy:updated</ins> task has finished, and then we call the <ins>pygments:pygmentsSetup</ins> task:
+
+<Code frame="code" code={pygments} lang="ruby" title="pygments.rake" />
+<br />
+This task takes the config files, and runs Pygments on them, creating the <ins>*.el.html</ins> files, and then invokes the <ins>:cpPressri</ins> task.
+
+<Code frame="code" code={cpPreSSRI} lang="ruby" title="cpPreSSRI.rake" />
+<br />
+This simply copies the files into the webserver directory, and then invokes the <ins>:ssriRun</ins> task.
+
+<Code frame="code" code={ssriRun} lang="ruby" title="ssriRun.rake" />
+<br />
+This runs SSRI on directory, adding the newly generated <ins>*.el.html</ins> files to <ins>emacsFiles.html</ins>.
+
+##### Closing thoughts
+Was it a good use of my time to devlop a templating engine, learn ruby and rake files, and to setup Capistrano, just to save myself from occasionally having to copy and paste some HTML into a file? Probably not - but, it was kinda fun and I was bored.

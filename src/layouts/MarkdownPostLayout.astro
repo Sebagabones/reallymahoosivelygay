@@ -1,14 +1,37 @@
 ---
 import MainBackgroundLayout from "./MainBackgroundLayout.astro";
+import Header from "../components/Header.astro";
 const { frontmatter } = Astro.props;
 ---
 
-<MainBackgroundLayout pageTitle={frontmatter.title} pageSubHeading={frontmatter.description}>
+<html lang="en">
+        <head>
+          <meta charset="utf-8" />
+          <link href="/favicon.ico" rel="icon" type="image/x-icon" />
+          <meta name="viewport" content="width=device-width" />
+          <meta name="generator" content={Astro.generator} />
+          <title>{frontmatter.title}</title>
+        </head>
+        
+        <body class="container">
+          <Header />
+          
+          <main class="container">
+            <h2>{frontmatter.title}</h2>
+            <i>{frontmatter.description}</i>
+            <div class="postContents">
+                <p>Written {frontmatter.pubDate.toLocaleDateString()}</p>
+                <slot />
+            </div>
+        </main>
+    </body>
+    <footer class="container">
+        <a href="/blog"> &lt-- Back to posts  </a>
+    </footer>
+</html>
 
-
-<p>{frontmatter.pubDate.toLocaleDateString()}</p>
-
-<p>Written by: {frontmatter.author}</p>
-
-<slot />
-</MainBackgroundLayout>
+<style>
+    .postContents{
+        padding-top: 2vh;
+    }
+</style>
