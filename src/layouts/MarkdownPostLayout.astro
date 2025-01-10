@@ -26,7 +26,7 @@ const { frontmatter, postName } = Astro.props;
         </main>
     </body>
     <footer class="container">
-        <p>[~/blog/posts/{postName}]::$<a href="/blog" class="linkHome"> cd ~/blog</a></p>
+        <p>[~/blog<span class="markdownFooterFilepath">/posts/{postName}</span>]::$<a href="/blog" class="linkHome"> cd ~/blog</a></p>
     </footer>
 </html>
 
@@ -34,4 +34,13 @@ const { frontmatter, postName } = Astro.props;
     .postContents{
         padding-top: 2vh;
     }
+    
+    @media screen and (max-width: 600px) {
+    .markdownFooterFilepath {
+        display: none;
+        visibility: hidden;
+        
+    }
+}
+
 </style>
