@@ -1,23 +1,37 @@
 ---
 import '../styles/global.css';
+
+import Navigation from './Navigation.astro';
 import ThemeButton from './ThemeButton.astro';
 import { Code } from 'astro-expressive-code/components'
 
 ---
-<header class="headerNav">
+<header class="headerNav container">
     <nav class="container">
         <ul>
             <li><ThemeButton /></li>
         </ul>
         <ul>
-            <li><b><a href="/" class="HeaderMainLink">Mahoosively Gay</a></b></li>
+            <div class="titleLink">
+                <li><b><a href="/" class="HeaderMainLink">Mahoosively Gay</a></b></li>
+            </div>
         </ul>
         <ul>
-            <li><button class="secondary"><a class="themeButton" href="/contact">Contact</a></button></li>      
-            <li><button class="secondary"><a class="themeButton" href="/blog">Blog</a></button></li>
+            <li><Navigation /></li>
         </ul>
 
     </nav>
   </header>
 
-
+<style>
+  @media screen and (max-width: 600px) {
+    .titleLink {
+      visibility: hidden;
+      /* clear: both;
+      float: left;
+      margin: 10px auto 5px 20px;
+      width: 28%; */
+      display: none;
+    }
+  }
+</style>

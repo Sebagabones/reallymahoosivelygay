@@ -4,10 +4,12 @@ import MainBackgroundLayout from '../layouts/MainBackgroundLayout.astro'
 
 const pageTitle = "Possibly the most sensible server I had";
 const pageSubHeading = " ";
+const url = import.meta.url;
+const filename = url.split('/').pop()?.split('.')[0]
 ---
 
 
-<MainBackgroundLayout pageTitle={pageTitle}>
+<MainBackgroundLayout pageTitle={pageTitle} filename={filename}>
 		
 		<p>
 			bonescallhome was a IBM x3200 M3, which was running Ubuntu server with

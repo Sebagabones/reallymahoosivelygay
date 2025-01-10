@@ -124,9 +124,14 @@ const pageSubHeading = "Honestly, this does a better job of telling you more abo
                         'footer',
                         { className: "container", style: {paddingTop: "3.5vh"}},
                         createElement(
+                        'p',
+                        null,
+                        "[~/spotifySongs]::$",
+                        createElement(
                             'a',
                             {href:'/'},
-                            'Main Page'
+                            ' cd ~/'
+                        )
                         )
                     )
                 );

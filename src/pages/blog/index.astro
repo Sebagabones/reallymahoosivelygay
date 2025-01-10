@@ -1,10 +1,10 @@
 ---
 
-import MainBackgroundLayout from "../layouts/MainBackgroundLayout.astro"
+import MainBackgroundLayoutWithoutFooter from "../../layouts/MainBackgroundLayoutWithoutFooter.astro"
 import type { CollectionEntry } from 'astro:content'
 import { getCollection } from "astro:content";
-import BlogPost from "../components/BlogPost.astro";
-import Footer from "../components/footer.astro";
+import BlogPost from "../../components/BlogPost.astro";
+import Footer from "../../components/footer.astro";
 const pageTitle = "A collection of my various projects...";
 const pageSubHeading = '...and my ramblings about them';
 const allPosts = (
@@ -15,7 +15,7 @@ const allPosts = (
 
 ---
 
-<MainBackgroundLayout pageTitle={pageTitle}, pageSubHeading={pageSubHeading}>
+<MainBackgroundLayoutWithoutFooter pageTitle={pageTitle}, pageSubHeading={pageSubHeading}>
 	<div class="WelcomePara">
 		<p>Heya! I decided I should probably make a more ordered way of discussing my different projects, instead of linking them all over my website, which isn't (wasn't?) particularly useful for finding information:</p>
 	</div>
@@ -30,8 +30,10 @@ const allPosts = (
 		<script define:vars={{allPosts}}>console.log(allPosts.sort())</script>
 		</div>
 	
-</MainBackgroundLayout>
-
+</MainBackgroundLayoutWithoutFooter>
+<footer class="container">
+	<p>[~/blog/]::$<a href="/" class="linkHome"> cd ~/</a></p>
+</footer>
 <style>
 	.WelcomePara {
 		padding-top: 3vh;

@@ -1,6 +1,8 @@
 ---
 import '../styles/global.css'
+
+const {filename} = Astro.props
 ---
 <footer class="container">
-    <a href="/"> Main Page </a>
+    <p>[~/{filename}]::$<a href="/" class="linkHome"> cd ~/</a></p>
 </footer>

@@ -1,0 +1,25 @@
+---
+
+const url = Astro.request.url;
+const filename = url.split('/')[3];
+---
+
+<details class="dropdown themeButtonDropDown">
+    <summary role="button" class="secondary"><span class="fileNameSpan">[~/{filename}]</span>::$ cd</summary>
+    <ul>
+      <li><a  href="/">~/</a></li>
+      <li><a  href="/blog">~/blog</a></li>
+      <li><a  href="/contact">~/contact</a></li>
+    </ul>
+</details>
+
+
+<style>
+    @media screen and (max-width: 450px) {
+    .fileNameSpan {
+        display: none;
+        visibility: hidden;
+        
+    }
+}
+</style>

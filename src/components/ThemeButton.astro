@@ -1,10 +1,15 @@
 ---
 import "../styles/global.css"
 ---
-<ul>
-    <li><button class="secondary"><a href="#" data-theme-switcher="light" class="themeButton">Light</a></button></li>
-    <li><button class="secondary"><a href="#" data-theme-switcher="dark" class="themeButton">Dark</a></button></li>
-</ul>
+
+  <details class="dropdown themeButtonDropDown">
+    <summary role="button" class="secondary">Theme</summary>
+    <ul>
+      <li><a href="#" data-theme-switcher="light">Light</a></li>
+      <li><a href="#" data-theme-switcher="dark">Dark</a></li>
+    </ul>
+  </details>
+
 
 
 <script is:inline>
@@ -73,6 +78,10 @@ const themeSwitcher = {
   },
 
 
+  // Preferred color scheme
+  get preferredColorScheme() {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  },
 
 //   // Init switchers
   initSwitchers() {
@@ -81,6 +90,7 @@ const themeSwitcher = {
       button.addEventListener(
         "click",
         (event) => {
+        
           event.preventDefault();
           buttonThemePressed = button.getAttribute(this.buttonAttribute);
 
@@ -92,6 +102,10 @@ const themeSwitcher = {
             window.localStorage?.setItem(THEME_STORAGE_KEY, buttonThemePressed);
 
           }
+          // else  if (buttonThemePressed == "auto") {
+          //   document.querySelector("html")?.setAttribute(this.rootAttribute, this.preferredColorScheme)
+          //   window.localStorage?.setItem(THEME_STORAGE_KEY, buttonThemePressed);
+          // }
           document.querySelector(this.menuTarget)?.removeAttribute("open");
         },
         false
