@@ -28,6 +28,6 @@ pnpm-debug.log*
 
 .yarn/
 
-yarn.lock
+
 
 log/
