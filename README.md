@@ -1,1 +1,1 @@
-My attempt at creating a website using a framework - I am using astro for this 
+My personal website, built with Astro, and deployed with node - turns out frameworks *are* fun after all. 
