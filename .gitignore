@@ -24,3 +24,8 @@ pnpm-debug.log*
 .idea/
 
 .vscode/
+
+
+.yarn/
+
+yarn.lock
