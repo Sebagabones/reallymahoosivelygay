@@ -4,5 +4,15 @@ import '../styles/global.css'
 const {filename} = Astro.props
 ---
 <footer class="container">
-    <span>[~/{filename}]::$<a href="/" class="linkHome"> cd ~/</a></span>
+    <span><span class="footerFilenameLink">[~/{filename}]</span>::$<a href="/" class="linkHome"> cd ~/</a></span>
 </footer>
+
+<style>
+    @media screen and (max-width: 450px) {
+    .footerFilenameLink {
+        display: none;
+        visibility: hidden;
+        
+    }
+}
+</style>
