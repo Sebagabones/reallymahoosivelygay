@@ -9,7 +9,7 @@ set :repo_url, "git@github.com:Sebagabones/reallymahoosivelygay.git"
 set :branch, 'main'
 # Default deploy_to directory is /var/www/my_app_name
 # set :deploy_to, "/var/www/my_app_name" #
-set :deploy_to, "/var/www/mahoosively.gay/public_html/astroSite/mahoosivelygayblog"
+set :deploy_to, "/var/www/mahoosively.gay/public_html/astroSite/cap"
 # Default value for :format is :airbrussh.
 # set :format, :airbrussh
 
