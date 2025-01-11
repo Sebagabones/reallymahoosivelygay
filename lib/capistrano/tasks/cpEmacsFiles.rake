@@ -2,7 +2,7 @@
 
 newarray=%w{config.el packages.el init.el};
 desc "Copies files to webserver"
-task :cpPressri do
+task :cpEmacsFiles do
   on roles(:all) do |host|
     newarray.each do |file|
       info "Copying #{file}"
