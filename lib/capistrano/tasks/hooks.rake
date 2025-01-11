@@ -4,3 +4,4 @@
  after 'deploy:symlink:release', :yarnInstall
  after 'deploy:symlink:release', :yarnBuild
  after 'deploy:symlink:release', :cpCurrentReleaseToPM2Dir
+ after 'deploy:symlink:release', :cpEmacsFiles
