@@ -7,7 +7,7 @@ task :cpEmacsFiles do
     newarray.each do |file|
       info "Copying #{file}"
       dirPath ="/var/www/mahoosively.gay/public_html/emacsConfig/current/#{file}"
-      execute :cp, "#{dirPath}", "#{release_dir}/public/codeFiles/emacsConfFiles"
+      execute :cp, "#{dirPath}", "#{release_path}/public/codeFiles/emacsConfFiles"
     end
   end
 end
