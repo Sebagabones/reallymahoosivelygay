@@ -11,6 +11,8 @@ import fs from 'node:fs';
 
 import node from '@astrojs/node';
 
+import sitemap from '@astrojs/sitemap';
+
 // const jsoncStringDark = fs.readFileSync(new URL(`./dark.jsonc`, import.meta.url), 'utf-8')
 // const dark = ExpressiveCodeTheme.fromJSONString(jsoncStringDark)
 // const jsoncStringLight = fs.readFileSync(new URL(`./light.jsonc`, import.meta.url), 'utf-8')
@@ -42,7 +44,7 @@ export default defineConfig({
     }
   
     
-  }), mdx(),],
+  }), mdx(), sitemap()],
 
   adapter: node({
     mode: 'standalone',
