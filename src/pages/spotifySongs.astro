@@ -1,227 +1,51 @@
 ---
 import '../styles/global.css'
 import MainBackgroundLayoutWithoutFooter from '../layouts/MainBackgroundLayoutWithoutFooter.astro';
+import Greeting from '../components/Greeting';
+import SpotifySongsReact from '../components/SpotifySongsReact';
 
 const pageTitle = "A live tracker of what I am listening to on Spotify";
 const pageSubHeading = "Honestly, this does a better job of telling you more about my current mood than my music taste, but no matter.";
 ---
 
-
-<MainBackgroundLayoutWithoutFooter pageTitle={pageTitle}>
-        <div id=mainDiv></div>
-
-        <script type="module">
-            import { createElement, useState, useEffect } from "https://esm.sh/react";
-            import { createRoot } from "https://esm.sh/react-dom/client";
-
-            // Component to display Now Playing if playing
-            function NowPlayingIsPlaying({ songNowPlaying, artistNowPlaying, songURL }) {
-                return createElement(
-                    'div',
-                    { className: 'playingNow' },
-                    createElement(
-                        'p',
-                        null,
-                        'I am currently listening to ',
-                        createElement(
-                            'a',
-                            { className: 'linkToNowPlaying', target: "_blank", href: songURL },
-                            createElement(
-                                'b',
-                                { className: 'boldedSongNameNowPlaying' },
-                                songNowPlaying
-                            )
-                        ),
-                        ', performed by ',
-                        createElement(
-                            'b',
-                            { className: 'boldedArtistNameNowPlaying' },
-                            artistNowPlaying
-                        )
-                    )
-                );
-            }
-            // Component to display if not playing anything
-            function NowPlayingNotPlaying() {
-                return createElement(
-                    'p',
-                    { className: 'playingNow' },
-                    'Sadly, I am currently not listening to anything - but you can still see my top songs below:'
-                );
-            }
-
-            function MainDiv() {
-                return createElement(
-                    'div',
-                    null,
-                    createElement(
-                        'div',
-                        { className: "nowPlayingOrLoading", style: {minHeight: '160px'}},
-                        createElement(
-                            DataFetcherNowPlaying,
-                        )
-                    ),
-                    createElement(DataFetcherTopTracks)
-                )
-
-            };
-
-            function renderTopTrack({ songName, artistName, urlToSong }) {
-                return createElement(
-                    'a',
-                    { className: 'linkToTopTrack', target: " _blank", href: urlToSong },
-                    createElement(
-                        'article',
-                        { className: 'cardSongs' },
-                        createElement(
-                            'h4',
-                            null,
-                            songName
-                        ),
-                        createElement(
-                            'p',
-                            null,
-                            artistName
-                        )
-                    )
-                )
-            };
-
-            const DataFetcherTopTracks = () => {
-                const [data, setData] = useState(null);
-                const [error, setError] = useState(null);
-
-                const fetchDataTopTracks = async () => {
-                    try {
-                        const response = await fetch('https://api.mahoosively.gay/getTopTracks');
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok.');
-                        }
-                        const data = await response.json();
-                        setData(data); // Set the fetched data
-                    } catch (error) {
-                        setError(error.message);
-
-                    }
-                };
-                useEffect(() => {
-                    fetchDataTopTracks();
-                }, []);
-                if (!data) return createElement('div', null, '');
-
-                const songList = data.map((song, index) => {
-                    return createElement(
-                        renderTopTrack,
-                        { songName: song.songName, artistName: song.artist, urlToSong: song.urlToSong }
-                    )
-                }
-                );
-                return createElement(
-                    'div',
-                    { className: 'getTopTracks' },
-                    songList,
-                    createElement(
-                        'footer',
-                        { className: "container", style: {paddingTop: "3.5vh"}},
-                        createElement(
-                        'p',
-                        null,
-                        "[~/spotifySongs]::$",
-                        createElement(
-                            'a',
-                            { className: "linkHome", href:'/'},
-                            ' cd ~/'
-                        )
-                        )
-                    )
-                );
-
-            }
-
-            // DataFetcherNowPlaying component
-            const DataFetcherNowPlaying = () => {
-                const [data, setData] = useState(null);
-                const [isLoading, setIsLoading] = useState(true);
-                const [error, setError] = useState(null);
-
-                // Fetch data on initial load and when the button is clicked
-                const fetchData = async () => {
-                    setIsLoading(true); // Set loading to true when fetching starts
-                    try {
-                        const response = await fetch('https://api.mahoosively.gay/getNowPlaying');
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok.');
-                        }
-                        const data = await response.json();
-                        setData(data); // Set the fetched data
-                        setIsLoading(false); // Set loading to false when done
-                    } catch (error) {
-                        setError(error.message);
-                        setIsLoading(false); // Handle errors
-                    }
-                };
-
-                // Fetch data initially when component mounts
-                useEffect(() => {
-                    fetchData();
-                }, []);
-
-                // Button click triggers re-fetch
-                const handleRefresh = () => {
-                    fetchData();
-                };
-
-                // While loading, show a loading spinner or message
-                if (isLoading) {
-                    return createElement('div', { className: "urgh", 'aria-busy': true }, "");
-                }
-
-                // If no data is fetched, show error or retry message
-                if (!data) {
-                    return createElement('p', null, "Either you spammed my API or something went wrong lol");
-                }
-
-                // If data exists and song is playing
-                if (data.isPlaying === "true") {
-                    return createElement(
-                        'div',
-                        null,
-                        createElement(
-                            NowPlayingIsPlaying,
-                            {
-                                songNowPlaying: data.songName,
-                                artistNowPlaying: data.artist,
-                                songURL: data.urlToSong
-                            }
-                        ),
-                        createElement(
-                            'button',
-                            { className: "container secondary", onClick: handleRefresh },
-                            "Refresh Now Playing"
-                        )
-                    );
-                }
-
-                // If not playing anything
-                if (data.isPlaying === "false") {
-                    return createElement(
-                        'div',
-                        null,
-                        createElement(NowPlayingNotPlaying),
-                        createElement(
-                            'button',
-                            { className: "container secondary", onClick: handleRefresh },
-                            "Refresh Now Playing"
-                        )
-                        );
-                }
-
-                // Fallback for any other case
-                return null;
-            };
-
-            // Render the main component
-            const root = createRoot(document.getElementById("mainDiv"));
-            root.render(createElement(MainDiv));
-        </script>
+<MainBackgroundLayoutWithoutFooter pageTitle={pageTitle} pageSubHeading={pageSubHeading}>
+<!-- <Greeting /> -->
+<SpotifySongsReact client:load />
 </MainBackgroundLayoutWithoutFooter>
+<style >
+.spotifyBar {
+    content: '';
+    position: relative;
+
+/*  		padding: 1vh; */
+    height: 0.5vh;
+    overflow: hidden;
+    /* Required to create a pseudo-element */
+    inset: 0;
+    /* Align it to the edges of .bar */
+    background-color: green;
+    /* Color of the progress bar */
+    width: 0%;
+    /* Start width as 0% */
+    height: 1vh;
+    /* Full height to match the parent */
+    /* animation: fill 100s linear forwards;
+    animation-delay: -90s; */
+    /* Adjust start delay */
+    border-radius: 5px;
+        width: 100%; /* or any specific width */
+        height: 5px; /* or any specific height */
+        background-color: #1db954; /* Spotify green color */
+        position: relative;
+}
+
+@keyframes fill {
+    from {
+        width: 0%;
+    }
+
+    to {
+        width: 100%;
+    }
+}
+</style>

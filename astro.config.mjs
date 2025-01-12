@@ -1,7 +1,6 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 
-import preact from "@astrojs/preact";
 
 import mdx from "@astrojs/mdx";
 
@@ -12,6 +11,8 @@ import fs from 'node:fs';
 import node from '@astrojs/node';
 
 import sitemap from '@astrojs/sitemap';
+
+import react from '@astrojs/react';
 
 // const jsoncStringDark = fs.readFileSync(new URL(`./dark.jsonc`, import.meta.url), 'utf-8')
 // const dark = ExpressiveCodeTheme.fromJSONString(jsoncStringDark)
@@ -30,7 +31,7 @@ export default defineConfig({
 
   scopedStyleStrategy: "attribute",
 
-  integrations: [preact(), astroExpressiveCode({
+  integrations: [astroExpressiveCode({
     themes: [dark, light],
     // themes: ['catppuccin-latte', 'catppuccin-mocha', "catppuccin-macchiato", 'tokyo-night', 'material-theme-palenight'],
     minSyntaxHighlightingColorContrast: 0,
@@ -45,7 +46,7 @@ export default defineConfig({
     }
   
     
-  }), mdx(), sitemap()],
+  }), mdx(), sitemap(), react()],
 
   adapter: node({
     mode: 'standalone',
