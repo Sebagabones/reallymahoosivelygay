@@ -97,7 +97,7 @@ screen -X HOST=0.0.0.0 PORT=4321 node ./dist/server/entry.mjs
 <br />
 ...every time I reboot my webserver.
 
-So, thankfully, <ins>pm2</ins> exists - this allows me to have a daemon that node with the above arguments.
+So, thankfully, <ins>pm2</ins> exists - this allows me to have a daemon that runs node with the above arguments.
 
 ```sh
 pm2 start "HOST=0.0.0.0 PORT=4321 node ./dist/server/entry.mjs" --name mainwebsite && pm2 save && pm2 startup
