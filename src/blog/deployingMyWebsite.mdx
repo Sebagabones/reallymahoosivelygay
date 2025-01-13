@@ -1,0 +1,220 @@
+---
+title: 'Deploying my website in the most roundabout solution I could think of'
+pubDate: 2025-01-13
+description: '(basically deploying my emacs configuration part 2 but worse)'
+githubRepo: "https://github.com/Sebagabones/reallymahoosivelygay"
+---
+
+So, I have finally actually rebuilt my website with Astro, so I may as well do a blog post about how I deploy it.
+If you are expecting something sensible and boring like GitHub actions, sorry to disappoint, but like, it's me, you can't have been expecting that right?
+
+And so, our hero, Capistrano returns to once again allow me to do silly things with Rake files. I will split this up into two parts, the first the Emacs configuration deployment, followed by the tasks to deploy my website.
+
+##### Emacs Deployment:
+Slight variations from last time, no more SSRI :(
+
+As always, starting with <ins>hooks.rake</ins>
+
+```ruby hooks.rake
+#!/usr/bin/env ruby
+
+before 'deploy:starting', :uptime
+before 'deploy:starting', :gitpush
+
+after 'deploy:updated', :cpPrebuild
+```
+<br/>
+
+The tasks <ins>:uptime</ins> and <ins>:gitpush</ins> have both stayed the same as last time, so you can view the last blog post for those [here](/blog/posts/emacsconfonmywebsite/).
+<ins>:cpPrebuild</ins> is called after deploying the emacs configuration files to my server, and it copies the files into the directory where the latest release from my website resides. 
+```ruby cpPrebuild.rake
+#!/usr/bin/env ruby
+
+newarray=%w{config.el packages.el init.el};
+desc "Copies files to webserver"
+task :cpPrebuild do
+  on roles(:all) do |host|
+    newarray.each do |file|
+      info "Copying #{file}"
+      dirPath ="#{release_path}/#{file}"
+      execute :cp, "#{dirPath}", "/var/www/mahoosively.gay/public_html/astroSite/cap/current/public/codeFiles/emacsConfFiles"
+    end
+  end
+  invoke(:yarnBuild)
+end
+```
+<br />
+We can see that <ins>:yarnBuild</ins> is invoked once the files have been copied across. This simply runs <ins>yarn build</ins> in the release directory.
+``` ruby yarnBuild.rake
+#!/usr/bin/env ruby
+
+desc "Runs ssri"
+task :yarnBuild do
+  on roles(:all) do |host|
+    info "Running yarb on #{host}"
+    within "/var/www/mahoosively.gay/public_html/astroSite/cap/current/" do
+      info "Building in /var/www/mahoosively.gay/public_html/astroSite/cap/current/"
+      execute :yarn, "run", "build"
+    end
+  end
+  invoke(:cpCurrentReleaseToPM2Dir)
+end
+```
+<br />
+You may be wondering why I didn't run <ins>yarn install</ins> first; that will have already been done when the website was deployed, you can see this later.
+Finally, we invoke <ins>:cpCurrentReleaseToPM2Dir</ins>, which does the same as the task of the same name, explained under the website section, so for now just roll with it.
+
+``` ruby cpCurrentReleaseToPM2Dir.rake
+#!/usr/bin/env ruby
+
+desc "Copies files to right location for pm2 to use"
+task :cpCurrentReleaseToPM2Dir do
+  on roles(:all) do |host|
+      dirPath ="/var/www/mahoosively.gay/public_html/astroSite/cap/current/."
+      execute :cp, "-a",  "#{dirPath}", "/var/www/mahoosively.gay/public_html/astroSite/pm2Dir"
+  end
+end
+```
+<br />
+Okay, onto the website side of things!
+
+##### Website Deployment:
+Could I have just used git, and like, cloned the repo? Yeah totally, but that got boring - I don't recommend doing this lol.
+
+Anyway, with that disclaimer, I am initally going to explain a little about how the website is run before going over how I used Capistrano to do this for me.
+
+So, this website is run with a node server, super basic, basically copied and pasted directly out of Astro's docs:
+```sh
+HOST=0.0.0.0 PORT=4321 node ./dist/server/entry.mjs
+```
+<br />
+Cool, that starts node fine, but like, that's localhost. 
+So we also want to proxy my domain through to node - for this I am using Apache, pretty simple. 
+Finally, how do we, like, start this after a reboot? I don't wanna log in and run...
+```sh
+screen -X HOST=0.0.0.0 PORT=4321 node ./dist/server/entry.mjs
+```
+<br />
+...every time I reboot my webserver.
+
+So, thankfully, <ins>pm2</ins> exists - this allows me to have a daemon that node with the above arguments.
+
+```sh
+pm2 start "HOST=0.0.0.0 PORT=4321 node ./dist/server/entry.mjs" --name mainwebsite && pm2 save && pm2 startup
+```
+<br />
+
+The thing to keep in mind, is that on boot this will be run in the directory that you were in when you ran <ins>pm2 start</ins>.
+Hence, we need to make sure Capistrano deploys to the same place each time - surely that's easy, Capistrano makes a symlinked folder <ins>current</ins> which points to the most recent deployment.
+Okay, well, like, that should be easy right - just start <ins>pm2</ins> in the <ins>current</ins> directory. 
+Sadly, no, not that easy. <ins>pm2</ins> does not work with symlinks like that, and will keep using the previous release, even if the symlink changes to point to a newer release, even if you restart the node server.
+Well, damn, okay, we need to make sure we copy the current release into another directory, which is where we can run <ins>pm2</ins> from - it is more than happy to hot reload files themselves, just not symlinked files.
+
+Now you might see why I didn't cover that in the Emacs section lol - anyway, I am getting ahead of myself a bit here, lets start at the start:
+
+Of course, that means we start at <ins>hooks.rake</ins>
+```ruby hooks.rake
+#!/usr/bin/env ruby
+before 'deploy:starting', :gitCommitUpdate
+
+before 'deploy:symlink:release', :cpEmacsFiles
+after 'deploy:symlink:release', :yarnInstall
+after 'deploy:symlink:release', :yarnBuild
+after 'deploy:symlink:release', :cpCurrentReleaseToPM2Dir
+```
+<br />
+<ins>:gitCommitUpdate</ins> is honestly, super janky because I am lazy, please just don't do this lol
+
+``` ruby gitCommitUpdate.rake
+#!/usr/bin/env ruby
+
+desc 'Pull repo, commit any changes, asking for commit message, then push'
+task :gitCommitUpdate do
+  ask(:gitCommitMsg, prompt:"Please enter your commit message")
+     run_locally do
+       info "#{capture(:whoami)}  #{fetch(:gitCommitMsg)}"
+       execute "git commit -a -m \"#{fetch(:gitCommitMsg)}\""
+       execute "git pull"
+       execute "git push"
+     end
+end
+```
+<br />
+
+Yes, this does not work if there are no changes in the repository, no it isn't good, yes I am an idiot, don't use it, you've been warned.
+
+Anyway, on it goes, until before Capistrano symlinks the newest release to the 'current' dir. Here <ins>:cpEmacsFiles</ins> is called, which simply copies the most recent release from the Emacs deployment folder to the release folder - this means that I can update the Emacs files and my website separately, without needing to worry about rebuilding anything myself. 
+``` ruby cpEmacsFiles.rake
+#!/usr/bin/env ruby
+
+newarray=%w{config.el packages.el init.el};
+desc "Copies files to webserver"
+task :cpEmacsFiles do
+  on roles(:all) do |host|
+    newarray.each do |file|
+      info "Copying #{file}"
+      dirPath ="/var/www/mahoosively.gay/public_html/emacsConfig/current/#{file}"
+      execute :cp, "#{dirPath}", "#{release_path}/public/codeFiles/emacsConfFiles"
+    end
+  end
+end
+```
+<br />
+
+This should be pretty self explanatory, it is basically the same as what we did in the Emacs deployment.
+
+Once symlinking has been done, we need to install <ins>yarn</ins>:
+
+```ruby yarnInstall.rake
+
+desc "install yarn in current release dir"
+task :yarnInstall do
+  on roles(:all) do |host|
+    within "#{release_path}" do
+      info "Installing yarn in #{capture(:pwd)}"
+      execute :yarn, "install"
+    end
+  end
+end
+```
+<br />
+
+This just builds yarn in the release directory. Likewise, we need to build yarn in the release directory:
+
+```ruby yarnBuild
+
+desc "Build dist in current release dir"
+task :yarnBuild do
+  on roles(:all) do |host|
+    within "#{release_path}" do
+      info "Building in #{release_path}"
+      execute :yarn, "run", "build"
+    end
+  end
+end
+```
+<br />
+
+Once that has been done, we just need to copy the files into the directory where <ins>pm2</ins> was run/is running from:
+
+```ruby cpCurrentReleaseToPM2Dir
+#!/usr/bin/env ruby
+
+desc "Copies files to right location for pm2 to use"
+task :cpCurrentReleaseToPM2Dir do
+  on roles(:all) do |host|
+      dirPath ="#{release_path}/."
+      execute :cp, "-a",  "#{dirPath}", "/var/www/mahoosively.gay/public_html/astroSite/pm2Dir"
+  end
+end
+```
+<br />
+
+And that should be it! By no means is it good, but I am lazy, and it works for me to just be able to run...
+```shell
+bundle exec cap prod deploy
+```
+<br />
+... and have my website build and deploy itself, or update the emacs configuration files on my website.
+
+Thanks for reading!
