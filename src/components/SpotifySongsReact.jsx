@@ -113,7 +113,7 @@ const MainDiv = () => {
         
     if(nowPlayingData) {
         var timerID = 0;
-        if(nowPlayingData.isPlaying) {
+        if(nowPlayingData.isPlaying === "true") {
             const  timeLeft = (nowPlayingData.totalDuration -  nowPlayingData.progress) * 1000;            
             timerID = setTimeout(fetchDataNowPlaying, timeLeft);
 
