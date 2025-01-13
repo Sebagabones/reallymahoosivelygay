@@ -6,4 +6,4 @@ Note to self, the emacs files in this repo are place holders, the most up to dat
 
 TODO:
 Update blog post on spotify api as I now have progress bar
-Add github repos to all blog posts
+New blog post on setting up a complete petcam setup
