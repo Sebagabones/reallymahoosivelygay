@@ -25,6 +25,7 @@ const light = ExpressiveCodeTheme.fromJSONString(jsoncStringLight)
 // https://astro.build/config
 export default defineConfig({
   site: 'https://mahoosively.gay',
+  output: "server",
   prefetch: {
     prefetchAll: true
   },

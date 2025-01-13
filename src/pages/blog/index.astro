@@ -12,7 +12,7 @@ const allPosts = (
     'blog',
   )
 ).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-
+export const prerender = true;
 ---
 
 <MainBackgroundLayoutWithoutFooter pageTitle={pageTitle}, pageSubHeading={pageSubHeading}>

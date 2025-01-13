@@ -16,7 +16,7 @@ const MainDiv = () => {
     const [topTracksData, setTopTracksData] = useState(null);
     const [topTracksIsLoading, setTopTracksIsLoading] = useState(true);
     const [errorTopTracks, setErrorTopTracks] = useState(null);
-
+    
     const fetchDataNowPlaying = async () => {
         setNowPlayingIsLoading(true); // Set loading to true when fetching starts
         try {

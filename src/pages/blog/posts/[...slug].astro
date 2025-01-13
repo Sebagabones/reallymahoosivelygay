@@ -13,6 +13,7 @@ return posts.map(post => ({
 
 const { post } = Astro.props;
 const { Content } = await render(post);
+export const prerender = true;
 ---
 <MarkdownPostLayout frontmatter={post.data}, postName={post.id}>
     <Content />

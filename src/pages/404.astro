@@ -3,6 +3,7 @@ import '../styles/global.css'
 import MainBackgroundLayout from '../layouts/MainBackgroundLayout.astro'
 import Footer from '../components/footer.astro'
 const pageTitle="...this is awkward, looks like I either haven't made this page, or I've misplaced it (or it just doesn't exist lol)"
+export const prerender = true;
 ---
 <MainBackgroundLayout pageTitle={pageTitle}>
 
