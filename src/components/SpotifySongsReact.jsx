@@ -3,6 +3,7 @@ import { useState, useEffect} from "react";
 import '../styles/global.css'
 import { createElement } from "react";
 
+
 // const API_ENDPOINT = "http://localhost:8000"
 const API_ENDPOINT = "https://api.mahoosively.gay"
 let initialLoad = true;
@@ -39,10 +40,12 @@ const MainDiv = () => {
             }
             const data = await response.json();
             setNowPlayingData(data); // Set the fetched data
+            setNowPlayingIsLoading(false); // Set loading to false when done
             
         }  catch (errorNowPlaying) {
             setErrorNowPlaying(errorNowPlaying.message);
-            
+            setNowPlayingIsLoading(false); // Set loading to false when done
+
         }
     };
     const fetchDataTopTracks = async () => {
@@ -68,9 +71,9 @@ const MainDiv = () => {
 
 
     // Button click triggers re-fetch
-    function handleRefresh(timerID) {
-        if(timerID) {
-            clearTimeout(timerID);
+    function handleRefresh(timerID) {        
+        if(timerID) {            
+            clearTimeout(timerID.timerID);
         }
         
         fetchDataNowPlaying();
@@ -109,14 +112,11 @@ const MainDiv = () => {
         initialLoad = false;
         
     if(nowPlayingData) {
-        let timerID = null;
+        var timerID = 0;
         if(nowPlayingData.isPlaying) {
-            const  timeLeft = (nowPlayingData.totalDuration -  nowPlayingData.progress) * 1000;
-            
-            console.log(timeLeft);
-            timerID = setTimeout(fetchDataNowPlayingWithoutLoading, timeLeft);
-            console.log("will fetch again in ", timeLeft/1000)
-            // setTimeout(fetchDataNowPlaying(), int(duration - progress));
+            const  timeLeft = (nowPlayingData.totalDuration -  nowPlayingData.progress) * 1000;            
+            timerID = setTimeout(fetchDataNowPlaying, timeLeft);
+
         }
         return (
             <div className="HoldingBothDiv">
@@ -168,7 +168,7 @@ function TopTracksComp({data}) {
                 {songList}
             </div>
             <footer className="container" style={{paddingTop:"3.5vh"}}>
-                <p>[~/spotifySongs]::$ <a className="linkHome" href="/"> cd ~/</a></p>
+                <p>[~/spotify]::$ <a className="linkHome" href="/"> cd ~/</a></p>
             </footer>
         </div>
     );
@@ -191,8 +191,6 @@ function PlayingNowComp({ songInfo}) {
     const currentProgress = songInfo.progress;
     const animationCss = `fill ${songDuration}s linear forwards`;
     const animationDelayCSS = `-${currentProgress}s`;
-    console.log("Rendering playing now, progress is ", currentProgress, " duration is ", songDuration, "  animation delay is ", animationDelayCSS)
-
     
     return(
     <div>

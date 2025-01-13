@@ -2,6 +2,7 @@
 import MainBackgroundLayout from "./MainBackgroundLayout.astro";
 import Header from "../components/Header.astro";
 const { frontmatter, postName } = Astro.props;
+
 ---
 
 <html lang="en">
@@ -20,7 +21,7 @@ const { frontmatter, postName } = Astro.props;
             <h2>{frontmatter.title}</h2>
             <i>{frontmatter.description}</i>
             <div class="postContents">
-                <p>Written {frontmatter.pubDate.toLocaleDateString()}</p>
+                <p>Written {frontmatter.pubDate.toLocaleDateString()}, <a href={frontmatter.githubRepo} target="_blank">GitHub repository</a></p>
                 <slot />
             </div>
         </main>
