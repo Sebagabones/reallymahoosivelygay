@@ -31,6 +31,20 @@ const MainDiv = () => {
             setNowPlayingIsLoading(false); // Handle errors
         }
     };
+    const fetchDataNowPlayingWithoutLoading = async () => {
+        try {
+            const response = await fetch(API_ENDPOINT + '/getNowPlaying');
+            if (!response.ok) {
+                throw new Error('Network response was not ok.');
+            }
+            const data = await response.json();
+            setNowPlayingData(data); // Set the fetched data
+            
+        }  catch (errorNowPlaying) {
+            setErrorNowPlaying(errorNowPlaying.message);
+            
+        }
+    };
     const fetchDataTopTracks = async () => {
         setTopTracksIsLoading(true); // Set loading to true when fetching starts
         try {
@@ -54,7 +68,11 @@ const MainDiv = () => {
 
 
     // Button click triggers re-fetch
-    const handleRefresh = () => {
+    function handleRefresh(timerID) {
+        if(timerID) {
+            clearTimeout(timerID);
+        }
+        
         fetchDataNowPlaying();
     };
 
@@ -67,7 +85,8 @@ const MainDiv = () => {
                 </div>
             )
             }
-        else if(nowPlayingIsLoading && !initialLoad){
+            // If this isnt the first time calling this function we must have refreshed now playing, but no point refreshing top songs so dont update them
+        else if(nowPlayingIsLoading && !initialLoad && topTracksData){
             return(
                 <div>
                 <div className="urgh1" style={{minHeight:'40px'}}></div>
@@ -82,29 +101,44 @@ const MainDiv = () => {
         // If no data is fetched, show error or retry message
         if (!topTracksData) {
             return (
-                <p>Sadly, I am currently not listening to anything - but you can still see my top songs below:</p>
+                <p>Looks like either you spammed my API or something went wrong </p>
             )
             
         }
 
         initialLoad = false;
         
-
-    return (
-        <div className="HoldingBothDiv">
-            <div className="nowPlayingOrLoading" style={{minHeight:'160px'}}>
-                <PlayingNowComp songInfo={nowPlayingData}/>
-                <div style={{paddingTop: "1vh", paddingBottom:"1vh"}}>
-                <button className="container secondary"  onClick= {handleRefresh}> Refresh Now Playing</button>
+    if(nowPlayingData) {
+        let timerID = null;
+        if(nowPlayingData.isPlaying) {
+            const  timeLeft = (nowPlayingData.totalDuration -  nowPlayingData.progress) * 1000;
+            
+            console.log(timeLeft);
+            timerID = setTimeout(fetchDataNowPlayingWithoutLoading, timeLeft);
+            console.log("will fetch again in ", timeLeft/1000)
+            // setTimeout(fetchDataNowPlaying(), int(duration - progress));
+        }
+        return (
+            <div className="HoldingBothDiv">
+                <div className="nowPlayingOrLoading" style={{minHeight:'160px'}}>
+                    <PlayingNowComp songInfo={nowPlayingData}/>
+                    <div style={{paddingTop: "1vh", paddingBottom:"1vh"}}>
+                    <button className="container secondary"  onClick= {() => handleRefresh({ timerID })}> Refresh Now Playing</button>
+                    </div>
                 </div>
-
+                <div className="topTracksHolder">
+                    <TopTracksComp data={topTracksData}/>
+                </div>
             </div>
-            <div className="topTracksHolder">
-                <TopTracksComp data={topTracksData}/>
-            </div>
-        </div>
-    );
+        );
+    }
+    else if(!nowPlayingData) {
+        return(
+        <p>Sadly, I am currently not listening to anything - but you can still see my top songs below:</p>
+        )
+    }
 }
+
 
 function RenderTopTrack({songName, artistName, urlToSong}) {
         return (
@@ -143,12 +177,8 @@ function TopTracksComp({data}) {
 }
 
 function PlayingNowComp({ songInfo}) {
-    if(!songInfo) {
-        return(
-            <p>Sadly, I am currently not listening to anything - but you can still see my top songs below:</p>
-        )
-    }
-    else if( songInfo.isPlaying === "false") {
+    
+    if( songInfo.isPlaying === "false") {
         return(
             <p>Sadly, I am currently not listening to anything - but you can still see my top songs below:</p>
         )
@@ -161,9 +191,9 @@ function PlayingNowComp({ songInfo}) {
     const currentProgress = songInfo.progress;
     const animationCss = `fill ${songDuration}s linear forwards`;
     const animationDelayCSS = `-${currentProgress}s`;
+    console.log("Rendering playing now, progress is ", currentProgress, " duration is ", songDuration, "  animation delay is ", animationDelayCSS)
 
-
-    console.log(animationCss, animationDelayCSS);
+    
     return(
     <div>
         <div className="playingNow">

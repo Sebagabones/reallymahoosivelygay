@@ -12,33 +12,8 @@ const pageSubHeading = "Honestly, this does a better job of telling you more abo
 <!-- <Greeting /> -->
 <SpotifySongsReact client:load />
 </MainBackgroundLayoutWithoutFooter>
+
 <style >
-.spotifyBar {
-    content: '';
-    position: relative;
-
-/*  		padding: 1vh; */
-    height: 0.5vh;
-    overflow: hidden;
-    /* Required to create a pseudo-element */
-    inset: 0;
-    /* Align it to the edges of .bar */
-    background-color: green;
-    /* Color of the progress bar */
-    width: 0%;
-    /* Start width as 0% */
-    height: 1vh;
-    /* Full height to match the parent */
-    /* animation: fill 100s linear forwards;
-    animation-delay: -90s; */
-    /* Adjust start delay */
-    border-radius: 5px;
-        width: 100%; /* or any specific width */
-        height: 5px; /* or any specific height */
-        background-color: #1db954; /* Spotify green color */
-        position: relative;
-}
-
 @keyframes fill {
     from {
         width: 0%;
