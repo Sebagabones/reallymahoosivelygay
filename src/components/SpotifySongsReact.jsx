@@ -104,7 +104,6 @@ const MainDiv = () => {
         // If no data is fetched, show error or retry message
         else if (!topTracksData) {
             return (
-                /* <p>Looks like either you spammed my API or something went wrong </p> */
                 <p></p>
             )
 
