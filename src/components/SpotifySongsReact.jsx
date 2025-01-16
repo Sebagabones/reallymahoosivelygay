@@ -102,11 +102,12 @@ const MainDiv = () => {
         }
 
         // If no data is fetched, show error or retry message
-        if (!topTracksData) {
+        else if (!topTracksData) {
             return (
-                <p>Looks like either you spammed my API or something went wrong </p>
+                /* <p>Looks like either you spammed my API or something went wrong </p> */
+                <p></p>
             )
-            
+
         }
 
         initialLoad = false;
@@ -206,4 +207,3 @@ function PlayingNowComp({ songInfo}) {
   export default function SpotifySongsReact() {
     return < MainDiv/>;
   }
-  

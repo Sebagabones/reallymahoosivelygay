@@ -124,6 +124,10 @@ a:hover {
   background-color: var(--pico-ctp-crust);
 }
 
+.cardSongs:hover {
+  background-color: var(--pico-ctp-crust);
+}
+
 
 :root{
   font-family: 'Fira Code', monospace;
@@ -710,9 +714,7 @@ ins {
 
 /* Orange color for dark color scheme (Forced) */
 /* Enabled if forced with data-theme="dark" */
-[data-theme="dark"],
-:root:not([data-theme="light"]) {
-/* [data-theme="dark"] { */
+[data-theme="dark"] {
   --pico-ctp-rosewater:#f5e0dc;
   --pico-ctp-flamingo:#f2cdcd;
   --pico-ctp-pink:#f5c2e7;
