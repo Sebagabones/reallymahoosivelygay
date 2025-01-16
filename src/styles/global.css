@@ -97,10 +97,7 @@ a:hover {
   color:var(--pico-ctp-lavender);
 }
 
-.cardSongs {
-  width: 100%;
-  background-color: var(--pico-ctp-mantle);
-}
+
 .getTopTracks {
   padding-top: 1vh;
 }
@@ -122,6 +119,11 @@ a:hover {
 }
 .blogListPosts:hover {
   background-color: var(--pico-ctp-crust);
+}
+
+.cardSongs {
+  width: 100%;
+  background-color: var(--pico-ctp-mantle);
 }
 
 .cardSongs:hover {

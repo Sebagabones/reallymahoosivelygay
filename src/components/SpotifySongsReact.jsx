@@ -143,7 +143,7 @@ const MainDiv = () => {
 
 function RenderTopTrack({songName, artistName, urlToSong}) {
         return (
-            <a className="linkToTopTrack" target="_blank" href={urlToSong}>
+            <a target="_blank" href={urlToSong}>
                 <article className="cardSongs">
                     <h4>{songName}</h4>
                     <p>{artistName}</p>
