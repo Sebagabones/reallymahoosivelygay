@@ -8,7 +8,7 @@ import { Code } from 'astro-expressive-code/components'
 ---
 <header class="headerNav container">
     <nav class="container">
-        <ul>
+        <ul class="noPaddingLeft">
             <li><ThemeButton /></li>
         </ul>
         <ul>
@@ -33,5 +33,9 @@ import { Code } from 'astro-expressive-code/components'
       width: 28%; */
       display: none;
     }
+  }
+  .headerNav {
+    padding-left: 0px;
+    padding-right: 0px;
   }
 </style>

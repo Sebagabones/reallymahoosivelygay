@@ -2,6 +2,8 @@
 
 @import url(https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css);
 
+/* @import url(https://cdn.jsdelivr.net/npm/victormono@latest/dist/index.min.css); */
+
 
 @font-face {
   font-family: 'JetBrains Mono';
@@ -153,10 +155,14 @@ a:hover {
 
 
 :root{
+  /* font-family: 'Fira Code', monospace; */
+  /* font-feature-settings: "ss08"; */
   font-family: 'Fira Code', monospace;
+
   font-size:100%;
   line-height: 150%;
   --pico-font-family-sans-serif: 'Fira Code', monospace;
+
   /* --pico-font-family: var(--pico-font-family-sans-serif); */
   --pico-font-family-monospace: 'JetBrains Mono', monospace;
 }
@@ -169,7 +175,10 @@ ins {
 
 .container {
   max-width:800px;
+  padding-right: 1vw;
+  padding-left: 1vw;
 }
+
 .projects ul {
     text-align:justify;
 }

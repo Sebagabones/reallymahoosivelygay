@@ -123,8 +123,8 @@ const MainDiv = () => {
             <div className="HoldingBothDiv">
                 <div className="nowPlayingOrLoading" style={{minHeight:'160px'}}>
                     <PlayingNowComp songInfo={nowPlayingData}/>
-                    <div style={{paddingTop: "1vh", paddingBottom:"1vh"}}>
-                    <button className="container secondary"  onClick= {() => handleRefresh({ timerID })}> Refresh Now Playing</button>
+                    <div style={{paddingTop: "1vh", paddingBottom:"2vh"}}>
+                      <button className="container secondary"  onClick= {() => handleRefresh({ timerID })}> Refresh Now Playing</button>
                     </div>
                 </div>
                 <div className="topTracksHolder">
