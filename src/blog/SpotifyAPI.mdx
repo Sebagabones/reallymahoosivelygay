@@ -99,7 +99,7 @@ async def topTracksJSON(accessToken, topTracksEndpoint):
 topTracksJsonTask = asyncio.create_task(topTracksJSON(accessToken, TOP_TRACKS_ENDPOINT))
 topTracksJson = await topTracksJsonTask
 ```
-
+<br />
 Cool! That is a super simple way to call the Spotify API - you can, as I did, extend this considerably - but, if you put everything together like so, we have a start to build off:
 ```py title=main.py
 #!/usr/bin/env python3

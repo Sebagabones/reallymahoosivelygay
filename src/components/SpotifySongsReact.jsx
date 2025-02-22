@@ -170,7 +170,7 @@ function TopTracksComp({data}) {
                 {songList}
             </div>
             <footer className="container" style={{paddingTop:"3.5vh"}}>
-                <p>[~/spotify]::$ <a className="linkHome" href="/"> cd ~/</a></p>
+                <p>[~/spotify]::{'<$>'} <a className="linkHome" href="/"> cd ~/</a></p>
             </footer>
         </div>
     );
