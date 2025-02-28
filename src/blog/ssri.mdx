@@ -1,0 +1,60 @@
+---
+title: 'Server Side Rendered Includes'
+pubDate: 2025-02-28
+description: 'Like all good projects, this started out as me wanting to save time and do less work, and soon spiraled into much more time and work.'
+githubRepo: "https://github.com/Sebagabones/Server-Side-Rendered-Includes"
+---
+#### A background on the idea itself:
+
+Regular HTML has no way of including other HTML files within it. Now, there have been workarounds and solutions to this forever, classically Apache Server Side Includes was one, and a more modern solution is to use React, or a templating engine like Jinja - these are all sensible options.
+
+I, however, am not a sensible person (see <a href="/blog/posts/emacsconfonmywebsite">here</a> for what started all of this).
+
+SSRI is my solution to a very simple templating engine for plain HTML to have working include statements to bring HTML in from other files.
+
+After reading <a href="https://css-tricks.com/the-simplest-ways-to-handle-html-includes/">this</a>, and not liking many of the options (Gulp seemed senisble, but was bit more than I wanted, as I didn't want to deal with gulp files), I found Apache Server Side Includes to be a 'sane' way to do what I wanted, except for one small problem; I could not get them to work properly. The best guide I found online was <a href="https://joabj.com/Writing/Tech/Tuts/Apache/Apache-SSI.html">here</a>, but when that didn't work I decided to make a solution that was pretty much Apache SSI, but where the include statements were pre-processed.
+
+The include statement is simply a html comment on a line where you want the entire contents from the linked file to be "pasted" in, and uses the following format:
+```html
+<!-- #include file="filename" optional comments -->
+```
+<br />
+where <code>filename</code> is the name of the file, including file extension (eg, file.html). In theory this would probably work if it was not on it's own line, but I haven't tested this.
+
+#### Why?
+I wanted something that worked without any dependencies, and didn't require learning a new markup style. The main goal for this was to be able to write pure plain HTML pages without using external libraries needing to be imported, and that didn't use JavaScript to load things in the browser. Could I have used something like NextJS for this? Probably - but I wanted something that would be very simple to use (albeit much less powerful).
+
+Apache SSI seemed very cool for a few reasons - super simple markup (kinda - lack of documention made it a bit harder, but the basic idea was decent), and even if something went wrong, the browser always received valid HTML. One issue I had was that, well, it didn't work, or at least, I couldn't find a way to get it working (again, very little documentation), and while I also felt like server processing the HTML on request would add a small amount of overhead, the biggest reason I didn't spend more time on getting SSI to work was because I wanted a way to use other webservers without needing to change my HTML files.
+
+I wanted to use PUG, but found that the html2pug converters didn't work well, and there were a few other issues I had with it, and I didn't want to learn another markup style and rewrite my website lol. Similarly with Gulp, I didn't want to have to deal with Gulp files.
+
+Hence, I took a lot of inspiration from SSI, but decided that preprocessing the HTML would be easier.
+
+In theory, this should work with most other libraries/backends, which is another benefit to it, as you would simply run this before starting the server.
+
+But, to be honest, the main reason I made it was because I was bored lol.
+
+#### Use Cases:
+I mean - the main use case was for my website lol. That said, it could be useful for anyone teaching/learning HTML, as it is a very simple concept that allows for (static) components to be reused across different pages, and reduces the learning new things load on anyone using it when compared to Gulp/Pug/React/Jinja.
+
+Basically, it allows for someone to learn the fundementals of HTML/CSS without needing a backend, but for them to still be able to save time without needing to copy HTML to different files.
+    
+Realistically, if you are wanting to use vanilla HTML/CSS in your website, and don't want to have to update a bunch of files everytime you change your footer, this might save you a bunch of time lol.
+
+
+#### Installation/Usage:
+
+A much more detailed guide is over at the <a href="https://github.com/Sebagabones/Server-Side-Rendered-Includes">GitHub repository</a>, however the quick and dirty for installation is that SSRI is on pip, so you can simply run 
+
+```nushell frame="terminal"
+pip install ssri
+```
+<br />
+
+#### Future plans
+This is mostly notes to future me, but a few things I would like to implement are:
+- Some sort of file watcher/http server, so any changes that are made are shown in real time
+- Use ripgrep for some more speed (if there exists a nice library)
+- rewrite in a different lang
+- support script/style tags
+- support head tags (combine heads together)
