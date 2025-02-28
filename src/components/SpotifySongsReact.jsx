@@ -3,8 +3,6 @@ import { useState, useEffect} from "react";
 import '../styles/global.css'
 import { createElement } from "react";
 
-
-// const API_ENDPOINT = "http://localhost:8000"
 const API_ENDPOINT = "https://api.mahoosively.gay"
 let initialLoad = true;
 
@@ -68,7 +66,6 @@ const MainDiv = () => {
         fetchDataNowPlaying();
         fetchDataTopTracks();
     }, []);
-
 
     // Button click triggers re-fetch
     function handleRefresh(timerID) {        
@@ -141,7 +138,6 @@ const MainDiv = () => {
     }
 }
 
-
 function RenderTopTrack({songName, artistName, urlToSong}) {
         return (
             <a target="_blank" href={urlToSong}>
@@ -174,8 +170,6 @@ function TopTracksComp({data}) {
             </footer>
         </div>
     );
-    
-
 }
 
 function PlayingNowComp({ songInfo}) {

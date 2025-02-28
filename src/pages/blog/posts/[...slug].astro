@@ -15,6 +15,23 @@ const { post } = Astro.props;
 const { Content } = await render(post);
 export const prerender = true;
 ---
+<script>
+
+const anchorHeadings = document.querySelectorAll("h3, h4, h5, h6");
+[...anchorHeadings]
+  .forEach((heading) => {
+    const anchor = document.createElement("a");
+    anchor.className = "anchor-link";
+    anchor.href = `#${heading.id}`;
+    heading.parentNode!.insertBefore(anchor, heading);
+    const linkIconWrapper = document.createElement("div");
+    linkIconWrapper.className = "link-icon-wrapper";
+
+    linkIconWrapper.innerHTML = "<$>";
+    anchor.appendChild(linkIconWrapper);
+    anchor.appendChild(heading);
+  });
+</script>
 <MarkdownPostLayout frontmatter={post.data}, postName={post.id}>
     <Content />
   </MarkdownPostLayout>

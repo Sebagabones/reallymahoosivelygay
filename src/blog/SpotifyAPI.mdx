@@ -17,7 +17,7 @@ But, moving onto the main part of this entry - writing the API:
 
 I decided to use [Falcon](https://falcon.readthedocs.io/en/stable/), as the framework for the API itself, and I found I liked it quite a lot - that said, this blog post is going to go over the Spotify calls more than using Falcon itself, there are plenty of guides, and the code for this should be on my GitHub.
 
-So, starting at the basics, I needed to get my authorisation codes, and while there are heaps of ways to do this, I found using [this](https://github.com/spotify/web-api-examples/tree/master/authorisation/authorisation_code) to be the easiest way to do it. Once we have our client_id, client_secret, and our refresh token, we can put those into a <ins>.env</ins> file for later.
+So, starting at the basics, I needed to get my authorisation codes, and while there are heaps of ways to do this, I found using [this](https://github.com/spotify/web-api-examples/tree/master/authorization/authorization_code) to be the easiest way to do it. Once we have our client_id, client_secret, and our refresh token, we can put those into a <ins>.env</ins> file for later.
 I used [dotenvx](https://dotenvx.com/) for a lot of this project while setting it up, so my <ins>.env</ins> looked like this:
 
 ```bat frame="code" title=".env"

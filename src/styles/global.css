@@ -17,9 +17,9 @@
   code { font-family: 'JetBrains Mono', monospace; }
 }
 
-
 html {
     color-scheme: light dark;
+    scroll-behavior: smooth;
 } 
 
 
@@ -278,6 +278,37 @@ ins {
   background-color: var(--pico-ctp-blue);
   position: relative;
 }
+
+@media screen and (max-width: 850px) {
+    .link-icon-wrapper {
+        display: none;
+        visibility: hidden;
+    }
+
+    .anchor-link:hover .link-icon-wrapper {
+        display: none;
+        visibility: hidden;
+    }
+}
+.anchor-link {
+    position: relative;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.link-icon-wrapper {
+    display: none;
+    position: absolute;
+    left: -35px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.anchor-link:hover .link-icon-wrapper {
+    display: block;
+    text-decoration-style: underline;
+}
+
 /* 
 .headerNav {
     background-color: var(--pico-ctp-mantle);
