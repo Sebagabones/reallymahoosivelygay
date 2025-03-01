@@ -1,0 +1,58 @@
+<section class="giscus BlogPostComments"></section>
+
+<script>
+  const localStorageTheme2 = localStorage.getItem("theme");
+  const systemSettingDark2 = window.matchMedia("(prefers-color-scheme: dark)");
+  function calculateSettingAsThemeString(
+    localStorageTheme2,
+    systemSettingDark2,
+  ) {
+    if (localStorageTheme2 !== null) {
+      return localStorageTheme2;
+    }
+
+    if (systemSettingDark2.matches) {
+      return "dark";
+    }
+
+    return "light";
+  }
+
+  let giscusTheme = localStorage.getItem("giscusTheme");
+  if (localStorage.getItem("giscusTheme") === null) {
+    let currentTheme = calculateSettingAsThemeString(
+      localStorageTheme2,
+      systemSettingDark2,
+    );
+    if (currentTheme === "dark") {
+      localStorage.setItem("giscusTheme", "catppuccin_mocha");
+    } else if (currentTheme === "light") {
+      localStorage.setItem("giscusTheme", "catppuccin_latte");
+    }
+
+    let giscusTheme = localStorage.getItem("giscusTheme");
+  }
+
+  let giscusAttributes = {
+    src: "https://giscus.app/client.js",
+    "data-repo": "Sebagabones/reallymahoosivelygay",
+    "data-repo-id": "R_kgDONgllfw",
+    "data-category": "Blog Post Comments",
+    "data-category-id": "DIC_kwDONgllf84CndIn",
+    "data-mapping": "url",
+    "data-strict": "0",
+    "data-reactions-enabled": "0",
+    "data-emit-metadata": "0",
+    "data-input-position": "top",
+    "data-theme": giscusTheme,
+    "data-lang": "en",
+    "crossorigin": "anonymous",
+    "async": "",
+  };
+  let giscusScript = document.createElement("script");
+  Object.entries(giscusAttributes).forEach(([key, value]) =>
+    giscusScript.setAttribute(key, value),
+  );
+  document.body.appendChild(giscusScript);
+
+</script>

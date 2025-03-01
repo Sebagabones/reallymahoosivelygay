@@ -1,6 +1,7 @@
 ---
 import MainBackgroundLayout from "./MainBackgroundLayout.astro";
 import Header from "../components/Header.astro";
+import Comments from "../components/BlogPostComments.astro"
 const { frontmatter, postName } = Astro.props;
 
 ---
@@ -26,6 +27,7 @@ const { frontmatter, postName } = Astro.props;
             </div>
         </main>
     </body>
+    <Comments client:load/>
     <footer class="container">
         <p>[~/blog<span class="markdownFooterFilepath">/posts/{postName}</span>]::<$><a href="/blog" class="linkHome"> cd ~/blog</a></p>
     </footer>
@@ -43,5 +45,4 @@ const { frontmatter, postName } = Astro.props;
         
     }
 }
-
 </style>

@@ -5,16 +5,12 @@ const { post  } = Astro.props;
 const url=`/blog/posts/${post.id}/`;
 const title=post.data.title;
 
-
 ---
-
 <a href={url}>
     <article class="blogListPosts">
         <h4 class="postTitle">{title}</h4>
         <h6 class="postBodyLimited">{post.data.pubDate.toLocaleDateString()}</h6>
-        
         <p class="postDescription">{post.data.description}</p>
-        
     </article>
 </a>
 <style>

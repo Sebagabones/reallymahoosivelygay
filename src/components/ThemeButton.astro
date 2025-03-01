@@ -2,120 +2,153 @@
 import "../styles/global.css"
 ---
 
-  <details class="dropdown themeButtonDropDown">
-    <summary role="button" class="secondary">Theme</summary>
-    <ul>
-      <li><a href="#" data-theme-switcher="light">Light</a></li>
-      <li><a href="#" data-theme-switcher="dark">Dark</a></li>
-    </ul>
-  </details>
-
-
+<details class="dropdown themeButtonDropDown">
+  <summary role="button" class="secondary">Theme</summary>
+  <ul>
+    <li><a href="#" data-theme-switcher="light">Light</a></li>
+    <li><a href="#" data-theme-switcher="dark">Dark</a></li>
+  </ul>
+</details>
 
 <script is:inline>
+  function calculateSettingAsThemeString({
+    localStorageTheme,
+    systemSettingDark,
+  }) {
+    if (localStorageTheme !== null) {
+      return localStorageTheme;
+    }
 
-function calculateSettingAsThemeString({ localStorageTheme, systemSettingDark }) {
-  if (localStorageTheme !== null) {
-    return localStorageTheme;
+    if (systemSettingDark.matches) {
+      return "dark";
+    }
+
+    return "light";
   }
 
-  if (systemSettingDark.matches) {
-    return "dark";
+  const localStorageTheme = localStorage.getItem("theme");
+  const systemSettingDark = window.matchMedia("(prefers-color-scheme: dark)");
+
+  let currentThemeSetting = calculateSettingAsThemeString({
+    localStorageTheme,
+    systemSettingDark,
+  });
+  // console.log(currentThemeSetting);
+
+  document.documentElement
+    .querySelector("html")
+    ?.setAttribute(this.rootAttribute, currentThemeSetting);
+  const cachedTheme = localStorage.getItem("theme");
+  if (cachedTheme) {
+    document.documentElement.dataset["theme"] = cachedTheme;
+    document.documentElement
+      .querySelector("html")
+      ?.setAttribute(this.rootAttribute, cachedTheme);
   }
 
-  return "light";
-}
+  const THEME_OWNER = document.documentElement;
+  const THEME_STORAGE_KEY = "theme";
+  const localStorageTheme2 = localStorage.getItem("theme");
+  const systemSettingDark2 = window.matchMedia("(prefers-color-scheme: dark)");
 
-const localStorageTheme = localStorage.getItem("theme");
-const systemSettingDark = window.matchMedia("(prefers-color-scheme: dark)");
+  // const currentThemeSetting = calculateSettingAsThemeString({ localStorageTheme, systemSettingDark });
+  document.addEventListener("DOMContentLoaded", () => {
+    const themeSwitcher = {
+      // Config
+      _scheme: "auto",
+      menuTarget: "details.dropdown",
+      buttonsTarget: "a[data-theme-switcher]",
+      buttonAttribute: "data-theme-switcher",
+      rootAttribute: "data-theme",
+      localStorageKey: "theme",
 
-let currentThemeSetting = calculateSettingAsThemeString({ localStorageTheme, systemSettingDark });
-// console.log(currentThemeSetting);
+      calculateSettingAsThemeString({
+        localStorageTheme2,
+        systemSettingDark2,
+      }) {
+        if (localStorageTheme2 !== null) {
+          return localStorageTheme2;
+        }
 
-document.documentElement.querySelector("html")?.setAttribute(this.rootAttribute, currentThemeSetting);
-const cachedTheme = localStorage.getItem("theme");
-if (cachedTheme) {
-  document.documentElement.dataset["theme"] = cachedTheme;
-  document.documentElement.querySelector("html")?.setAttribute(this.rootAttribute, cachedTheme);
-}
+        if (systemSettingDark2.matches) {
+          return "dark";
+        }
 
-const THEME_OWNER = document.documentElement;
-const THEME_STORAGE_KEY = 'theme';
-const localStorageTheme2 = localStorage.getItem("theme");
-const systemSettingDark2 = window.matchMedia("(prefers-color-scheme: dark)");
+        return "light";
+      },
 
-// const currentThemeSetting = calculateSettingAsThemeString({ localStorageTheme, systemSettingDark });
-document.addEventListener('DOMContentLoaded', () => {
-const themeSwitcher = {
-  // Config
-  _scheme: "auto",
-  menuTarget: "details.dropdown",
-  buttonsTarget: "a[data-theme-switcher]",
-  buttonAttribute: "data-theme-switcher",
-  rootAttribute: "data-theme",
-  localStorageKey: "theme",
+      // Init
+      init() {
+        this.scheme = this.calculateSettingAsThemeString({
+          localStorageTheme2,
+          systemSettingDark2,
+        });
 
+        this.initSwitchers();
+      },
 
+      // Preferred color scheme
+      get preferredColorScheme() {
+        return window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light";
+      },
 
+      //   // Init switchers
+      initSwitchers() {
+        const buttons = document.querySelectorAll(this.buttonsTarget);
+        buttons.forEach((button) => {
+          button.addEventListener(
+            "click",
+            (event) => {
+              event.preventDefault();
+              buttonThemePressed = button.getAttribute(this.buttonAttribute);
 
-  calculateSettingAsThemeString({ localStorageTheme2, systemSettingDark2 }) {
-  if (localStorageTheme2 !== null) {
-    return localStorageTheme2;
-  }
+              if (
+                buttonThemePressed == "dark" ||
+                buttonThemePressed == "light"
+              ) {
+                document
+                  .querySelector("html")
+                  ?.setAttribute(this.rootAttribute, buttonThemePressed);
+                // document.querySelector("html")?.setAttribute(this.rootAttribute, 'dark');
+                window.localStorage?.setItem(
+                  THEME_STORAGE_KEY,
+                  buttonThemePressed,
+                );
+                if (buttonThemePressed === "dark") {
+                  giscusTheme = "catppuccin_mocha"
+                  localStorage.setItem("giscusTheme", "catppuccin_mocha");
+                } else if (buttonThemePressed === "light") {
+                  giscusTheme = "catppuccin_latte"
+                  localStorage.setItem("giscusTheme", "catppuccin_latte");
+                }
+                function sendMessage(message) {
+                  const iframe = document.querySelector("iframe.giscus-frame");
+                  if (!iframe) return;
+                  iframe.contentWindow.postMessage(
+                    { giscus: message },
+                    "https://giscus.app",
+                  );
+                }
+                sendMessage({
+                  setConfig: {
+                    theme: giscusTheme,
+                  },
+                });
+              }
+              // else  if (buttonThemePressed == "auto") {
+              //   document.querySelector("html")?.setAttribute(this.rootAttribute, this.preferredColorScheme)
+              //   window.localStorage?.setItem(THEME_STORAGE_KEY, buttonThemePressed);
+              // }
+              document.querySelector(this.menuTarget)?.removeAttribute("open");
+            },
+            false,
+          );
+        });
+      },
+    };
 
-  if (systemSettingDark2.matches) {
-    return "dark";
-  }
-
-  return "light";
-  },
-
-  // Init
-  init() {
-    this.scheme = this.calculateSettingAsThemeString({ localStorageTheme2, systemSettingDark2 });
-
-    this.initSwitchers();
-  },
-
-
-  // Preferred color scheme
-  get preferredColorScheme() {
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-  },
-
-//   // Init switchers
-  initSwitchers() {
-    const buttons = document.querySelectorAll(this.buttonsTarget);
-    buttons.forEach((button) => {
-      button.addEventListener(
-        "click",
-        (event) => {
-        
-          event.preventDefault();
-          buttonThemePressed = button.getAttribute(this.buttonAttribute);
-
-          if (buttonThemePressed == "dark" || buttonThemePressed == "light") {
-
-            document.querySelector("html")?.setAttribute(this.rootAttribute, buttonThemePressed);
-            // document.querySelector("html")?.setAttribute(this.rootAttribute, 'dark');
-            window.localStorage?.setItem(THEME_STORAGE_KEY, buttonThemePressed);
-
-          }
-          // else  if (buttonThemePressed == "auto") {
-          //   document.querySelector("html")?.setAttribute(this.rootAttribute, this.preferredColorScheme)
-          //   window.localStorage?.setItem(THEME_STORAGE_KEY, buttonThemePressed);
-          // }
-          document.querySelector(this.menuTarget)?.removeAttribute("open");
-        },
-        false
-      );
-    });
-  },
-
-};
-
-
-themeSwitcher.init();
-});
-
+    themeSwitcher.init();
+  });
 </script>
