@@ -17,20 +17,22 @@
 
     return "light";
   }
-
   let giscusTheme = localStorage.getItem("giscusTheme");
+
   if (localStorage.getItem("giscusTheme") === null) {
     let currentTheme = calculateSettingAsThemeString(
       localStorageTheme2,
       systemSettingDark2,
     );
+    console.log(currentTheme);
     if (currentTheme === "dark") {
       localStorage.setItem("giscusTheme", "catppuccin_mocha");
+      giscusTheme = "catppuccin_mocha";
     } else if (currentTheme === "light") {
       localStorage.setItem("giscusTheme", "catppuccin_latte");
+      giscusTheme = "catppuccin_latte";
     }
-
-    let giscusTheme = localStorage.getItem("giscusTheme");
+    console.log(giscusTheme);
   }
 
   let giscusAttributes = {
