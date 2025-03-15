@@ -25,10 +25,10 @@ body{
 footer{
     margin-top: auto;
 }
-p {
-  padding-right: 1vw;
-  padding-left: 1vw;
-}
+/* p { */
+/*   padding-right: 1vw; */
+/*   padding-left: 1vw; */
+/* } */
 ul {
   padding-right: 1vw;
 }
