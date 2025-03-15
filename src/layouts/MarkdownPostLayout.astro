@@ -3,46 +3,57 @@ import MainBackgroundLayout from "./MainBackgroundLayout.astro";
 import Header from "../components/Header.astro";
 import Comments from "../components/BlogPostComments.astro";
 const { frontmatter, postName } = Astro.props;
-
 ---
 
 <html lang="en">
-        <head>
-          <meta charset="utf-8" />
-          <link href="/favicon.ico" rel="icon" type="image/x-icon" />
-          <meta name="viewport" content="width=device-width" />
-          <meta name="generator" content={Astro.generator} />
-          <title>{frontmatter.title}</title>
-        </head>
-        
-        <body class="container">
-          <Header />
-          
-          <main class="container">
-            <h2>{frontmatter.title}</h2>
-            <i>{frontmatter.description}</i>
-            <div class="postContents">
-                <p>Written {frontmatter.pubDate.toLocaleDateString()}, <a href={frontmatter.githubRepo} target="_blank">GitHub repository</a></p>
-                <slot />
-            </div>
-        </main>
-    </body>
+  <head>
+    <meta charset="utf-8" />
+    <link href="/favicon.ico" rel="icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta
+      name="description"
+      content="I write blog posts, sometimes they even make sense"
+    />
+    <title>{frontmatter.title}</title>
+  </head>
+
+  <body class="container">
+    <Header />
+
+    <main class="container">
+      <h2>{frontmatter.title}</h2>
+      <i>{frontmatter.description}</i>
+      <div class="postContents">
+        <p>
+          Written {frontmatter.pubDate.toLocaleDateString()},
+          <a href={frontmatter.githubRepo} target="_blank"
+            >GitHub repository</a
+          >
+        </p>
+        <slot />
+      </div>
+    </main>
     <Comments />
+  </body>
     <footer class="container">
-        <p>[~/blog<span class="markdownFooterFilepath">/posts/{postName}</span>]::<$><a href="/blog" class="linkHome"> cd ~/blog</a></p>
+      <p>
+        [~/blog<span class="markdownFooterFilepath">/posts/{postName}</span
+        >]::<$><a href="/blog" class="linkHome"> cd ~/blog</a>
+      </p>
     </footer>
+  
 </html>
 
 <style>
-    .postContents{
-        padding-top: 2vh;
-    }
-    
-    @media screen and (max-width: 600px) {
+  .postContents {
+    padding-top: 2vh;
+  }
+
+  @media screen and (max-width: 600px) {
     .markdownFooterFilepath {
-        display: none;
-        visibility: hidden;
-        
+      display: none;
+      visibility: hidden;
     }
-}
+  }
 </style>

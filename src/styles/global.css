@@ -17,6 +17,21 @@
   code { font-family: 'JetBrains Mono', monospace; }
 }
 
+body{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+footer{
+    margin-top: auto;
+}
+p {
+  padding-right: 1vw;
+  padding-left: 1vw;
+}
+ul {
+  padding-right: 1vw;
+}
 html {
     color-scheme: light dark;
     scroll-behavior: smooth;
@@ -153,7 +168,6 @@ a:hover {
 }
 
 
-
 :root{
   /* font-family: 'Fira Code', monospace; */
   /* font-feature-settings: "ss08"; */
@@ -179,9 +193,9 @@ ins {
   padding-left: 1vw;
 }
 
-.projects ul {
-    text-align:justify;
-}
+/* .projects ul { */
+/*     text-align:justify; */
+/* } */
 
 /* Little more spacing between lists */
 .projects li + li {
@@ -307,6 +321,15 @@ ins {
 .anchor-link:hover .link-icon-wrapper {
     display: block;
     text-decoration-style: underline;
+}
+
+footer {
+  flex-shrink: 0;
+	/* height: 50px; */
+	/* background-color: #134c7d; */
+  /* line-height: 50px; */
+
+
 }
 
 /* 

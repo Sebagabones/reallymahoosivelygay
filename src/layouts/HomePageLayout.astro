@@ -4,26 +4,25 @@ import Header from '../components/Header.astro'
 
 const {pageTitle} = Astro.props;
 ---
+
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <link href="/favicon.ico" rel="icon" type="image/x-icon" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
+    <meta name="description" content="I write code, sometimes it even works" />
     <title>{pageTitle}</title>
   </head>
   <body class="container">
     <Header />
     <main class="container">
       <h1>{pageTitle}</h1>
-      
 
-        <slot />
+      <slot />
     </main>
     <footer class="container">
       <p>[~/]::<$><a href="/contact" class="linkHome"> cd ~/contact</a></p>
-  </footer>
-  
-  
+    </footer>
   </body>
 </html>

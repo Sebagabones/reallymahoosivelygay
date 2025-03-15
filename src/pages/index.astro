@@ -11,13 +11,15 @@ export const prerender = true;
         I'm studying
         computer science at UWA, and this is my attempt at a personal website.
     </p>
+
+    <section id = "mainPageInterests">
     <h4>Interests</h4>
     <p>
         So, in case it wasn't obvious, I kinda enjoy messing around with computers. I am very much the stereotypical
         Linux user, and while I do enjoy making things "pretty" (I mean, I <i>am</i> a contributor to Catppuccin), I
         usually
         enjoy High Performance Computing (multithreading my beloved), messing with Asynchronous anything, Data
-        Formatting/Collection/Pipelining and automating anything I can (I have 100%
+        Formatting / Collection / Pipelining and automating anything I can (I have 100%
         spent
         more time automating something than it would have taken to just do it manually). I also go crazy for
         anything with
@@ -25,33 +27,35 @@ export const prerender = true;
             href="https://ucc.asn.au">University Computer Club</a> and take great joy in the amount of
         <s>sensible</s> projects the club gets up to (ask me about Coffinfish sometime!). Outside of that, I enjoy
         riding motorcycles and bicycles, and listening to music - to see what I am currently listening to, and the
-        20
-        songs I have played the most in recent history, click <a href="spotify">here</a> (if you want to see how I did this, a write-up is in my blog). I use Emacs (because of course I do), and you can see my configuration files <a href="emacs">here</a>.
-
+        20 songs I have played the most in recent history, click <a href="spotify">here</a> (if you want to see how I did this, a write-up is in my blog). I use Emacs (because of course I do), and you can see my configuration files <a href="emacs">here</a>.
     </p>
+    </section>
+    <br />
+    <section id = "mainPageSkill">
     <div class="skills">
         <h4>Skills</h4>
+            <h5>Programming</h5>
         <p>
+
             I am proficient in using Python and C/C++, and I enjoyed Java when I last used it in uni. Sadly, I have
             written a bunch of code
             in JavaScript (including a <s>lovely</s> flavour called Google Apps Script), and so I am perfectly happy
             to
-            write code in that, although I do prefer Typescript. If I am forced to write a bash script, I will
-            unironically use Amber instead, until it doesn't work lol. I have used SQL,
-            and obviously I can use HTML and CSS lol, and I have used vanilla React by itself before (parts of this
-            website do actually use React! For example, <a href="spotify">here</a>). This website was recently rebuilt with Astro instead of plain HTML/CSS with SSRI,
-            so at this point I have used Astro a considerable amount, and have lightly used some other frameworks before, in the form of RedwoodJS, Deno, and NextJS.
-            I have also used a little bit of Ruby, and have used Rake files before, and found them fun.
-        </p>
+            write code in that. If I am forced to write a bash script, I will
+            unironically use Amber instead, until it doesn't work lol. I have used SQL along with a little bit of Ruby with Rake files before, and found them fun.
+            </p>
         <p>
-            I am perfectly comfortable using Numpy and Matplotlib in Python, and I have done network programming, as
+            I am perfectly comfortable using Numpy and Matplotlib in Python. I have done an amount of lower level network programming, as
             well as using MPICH and OpenMP for multi-threading and multi-node computing in C/C++, and enjoyed it
             immensely. I also quite like messing around with Pulumi for automating infrastucture creation, and I
-            have
-            had a heap of fun using Capistrano to automate deploying parts of this website (read about that on my <a
+            have had a heap of fun using Capistrano to automate deploying parts of this website (read about that on my <a
                 href="/blog/">blog</a>).
         </p>
-        <p>I am <i>incredibly</i> at ease at using the command line on Unix systems lol - I am not exaggerating when
+        <p> Currently I work as a Software Engineer, where I write mostly C# and Cicode, and while I am still on the fence about C#, I have come around to liking Cicode <i>enough</i> (even if it doesn't have any syntax highlighting for any editors aside from Notepad++, and is slowwwwww, and that the sanest way to do most things is bitwise functions, but once you get over those pain points it is actually quite nice).
+        </p>
+
+        <h5>Linux</h5>
+        <p>I am <i>incredibly</i> at ease at using the command line on Unix systems lol. I am not exaggerating when
             I
             say I am more comfortable and proficient at using (and fixing/trouble shooting) Linux systems compared
             to
@@ -59,11 +63,21 @@ export const prerender = true;
             joy in running the most cooked and cursed setups as my daily driver, and I am currently using Bedrock
             Linux
             with an EndeavourOS stratum and an Alpine Linux stratum </p>
-    </div>
+        <p> I am currently messing around with NixOS, in an effort to be able to completely rebuild the entire homelab declaratively. This is proving to be tremendous amounts of fun, however uni and work have meant this has been put on hold for the time being (although you can find my repository on my GitHub, and it *should* be linked below). </p>
 
+            <h5>Web Development </h5>
+            <p>
+            As evidenced by you being able to read this, I can use HTML and CSS lol, and I have used both vanilla React by itself, as well the more normal way of using React before (parts of this
+            website do actually use React! For example, <a href="spotify">here</a>). This website was recently rebuilt with Astro instead of plain HTML/CSS with SSRI,
+            so at this point I have used Astro a considerable amount, and have lightly used some other frameworks before, in the form of RedwoodJS, Deno, and NextJS. That said, I am definitely not a  webdev by any means, and much prefer backend infrastructure if I need to do anything related to the web.
+        </p>
+    </div>
+    </section>
+    <br />
+    <section id = "mainPageProjects">
     <div class="projects">
         <h4>A list of my current (constantly) changing projects</h4>
-        <details open>
+        <details class="mainPageDetails" open>
             <summary>Software</summary>
             <p><i>This is a list of my current projects, if you want to see write-ups of my completed projects, you can view them at my <a href="/blog">blog</a>.</i></p>
             <ul>
@@ -75,10 +89,7 @@ export const prerender = true;
                     GitHub repo is <a href="https://github.com/Sebagabones/Server-Side-Rendered-Includes">here</a>.
                 </li>
                 <li>
-                    A RedwoodJS website for better management of <a href="https://ucc.asn.au">UCC</a>'s member VM's,
-                    replacing the Proxmox UI. This started out as a Pulumi project to speed up VM creation, and
-                    while there may still be part of that in the CI side of it, I am now planning to probably try to
-                    just use the Proxmox API.
+                    Setting up my homelab to do everything with NixOS - repository <a href="https://github.com/Sebagabones/NixingTheLab">here</a>
                 </li>
                 <li>
                     Theming for KDE's Labplot, to add Catppuccin themes to it - this will hopefully be finished
@@ -188,6 +199,7 @@ export const prerender = true;
             </ul>
         </details>
     </div>
+    </section>
 </HomePageLayout>
 
 <!-- <script is:inline>
