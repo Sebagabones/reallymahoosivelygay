@@ -23,16 +23,32 @@ const { frontmatter, postName } = Astro.props;
 		<meta name="twitter:card" content="summary_large_image" />
     <title>{frontmatter.title}</title>
     <OgImage>
-      <h1>{frontmatter.title}</h1>
-      <p>{frontmatter.description}</p>
+      <main>
+         <h2>{frontmatter.title}</h2>
+        <p>{frontmatter.description}</p>
+      </main>
       <style is:inline>
-        h1 {
+        h2 {
           color: #cdd6f4;
         }
-        p {
+        h6 {
           color: #cdd6f4;
         }
-        body {
+        span {
+          color: #cdd6f4;
+        }
+        main {
+          flex-direction: column;
+          padding-bottom:5px;
+          padding-left:10px;
+          padding-right:10px;
+          color: #cdd6f4;
+          background-color: #1e1e2e;
+          display: flex;
+          alignItems: center;
+          justifyContent: center;
+        }
+        html {
           background-color: #1e1e2e;
         }
       </style>
