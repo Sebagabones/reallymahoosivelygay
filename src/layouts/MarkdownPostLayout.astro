@@ -16,6 +16,11 @@ const { frontmatter, postName } = Astro.props;
       name="description"
       content="I write blog posts, sometimes they even make sense"
     />
+    <meta property="og:title" content={frontmatter.title} />
+		<meta property="og:type" content="article" />
+		<!-- <meta property="og:url" content={canonical} /> -->
+		<meta property="og:description" content="I write blog posts, sometimes they even make sense" />
+		<meta name="twitter:card" content="summary_large_image" />
     <title>{frontmatter.title}</title>
     <OgImage>
       <h1>{frontmatter.title}</h1>
