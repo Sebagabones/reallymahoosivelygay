@@ -2,6 +2,7 @@
 import MainBackgroundLayout from "./MainBackgroundLayout.astro";
 import Header from "../components/Header.astro";
 import Comments from "../components/BlogPostComments.astro";
+import { OgImage } from "astro-opengraph-image/components";
 const { frontmatter, postName } = Astro.props;
 ---
 
@@ -16,6 +17,21 @@ const { frontmatter, postName } = Astro.props;
       content="I write blog posts, sometimes they even make sense"
     />
     <title>{frontmatter.title}</title>
+    <OgImage>
+      <h1>{frontmatter.title}</h1>
+      <p>{frontmatter.description}</p>
+      <style is:inline>
+        h1 {
+          color: #cdd6f4;
+        }
+        p {
+          color: #cdd6f4;
+        }
+        body {
+          background-color: #1e1e2e;
+        }
+      </style>
+    </OgImage>
   </head>
 
   <body class="container">
@@ -38,8 +54,8 @@ const { frontmatter, postName } = Astro.props;
   </body>
     <footer class="container">
       <p>
-        [~/blog<span class="markdownFooterFilepath">/posts/{postName}</span
-        >]::<$><a href="/blog" class="linkHome"> cd ~/blog</a>
+        [~/b<span class="markdownFooterFilepath">log</span>/p<span class="markdownFooterFilepath">osts</span
+        >/{postName}]::<span class="markdownFooterFilepath"><$></span><a href="/blog" class="linkHome"> cd ~/blog</a>
       </p>
     </footer>
   

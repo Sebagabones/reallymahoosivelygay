@@ -1,7 +1,9 @@
 @import url(https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.violet.min.css);
 
 @import url(https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css);
-
+@import "@fontsource/jetbrains-mono";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/400-italic.css";
 /* @import url(https://cdn.jsdelivr.net/npm/victormono@latest/dist/index.min.css); */
 
 

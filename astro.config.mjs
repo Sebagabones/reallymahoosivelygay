@@ -20,6 +20,9 @@ import { h } from 'hastscript'
 
 import autolinkHeadings from 'rehype-autolink-headings'
 
+import opengraphImage from 'astro-opengraph-image';
+
+import { readFile } from "node:fs/promises";
 // const jsoncStringDark = fs.readFileSync(new URL(`./dark.jsonc`, import.meta.url), 'utf-8')
 // const dark = ExpressiveCodeTheme.fromJSONString(jsoncStringDark)
 // const jsoncStringLight = fs.readFileSync(new URL(`./light.jsonc`, import.meta.url), 'utf-8')
@@ -58,7 +61,36 @@ export default defineConfig({
     }
   
     
-  }), mdx(), sitemap(), react()],
+  }), mdx(), sitemap(), react(), opengraphImage(
+  { // what size do you want your images to be?
+      // 1200x630 is a good default across platforms,
+      // and 3x scale is a convenient choice.
+      width: 1200,
+      height: 630,
+      scale: 3,
+
+      // the fonts you picked before. you will have to include the particular
+      // weights and variants you want to use.
+      fonts: [
+        {
+          name: "JetBrains Mono",
+          data: await readFile(
+            "node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff",
+          ),
+          style: "normal",
+          weight: 400,
+        },
+        {
+          name: "JetBrains Mono",
+          data: await readFile(
+            "node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-700-normal.woff",
+          ),
+          style: "normal",
+          weight: 700,
+        },
+      ],
+
+  })],
 
   adapter: node({
     mode: 'standalone',
