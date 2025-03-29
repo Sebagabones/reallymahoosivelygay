@@ -1,4 +1,4 @@
-;; -*- no-byte-compile: t; -*-
+
 ;;; $DOOMDIR/packages.el
 
 ;; To install a package with Doom you must declare them here and run 'doom sync'
@@ -31,6 +31,17 @@
   :recipe (:host github :repo "Sebagabones/eee.el"
            :files (:defaults "*.el" "*.sh")))
 
+(package! astro-ts-mode
+  :recipe (:host github :repo"Sorixelle/astro-ts-mode"))
+
+(package! treesit-auto)
+(package! apheleia)
+(package! windsize)
+(package! side-hustle)
+(package! vagrant)
+(package! vagrant-tramp)
+(package! color-identifiers-mode)
+(package! indent-bars)
 ;; (package! eee
 ;;   :recipe (:host github :repo "eval-exec/eee.el"
 ;;            :files (:defaults "*.el" "*.sh")))
