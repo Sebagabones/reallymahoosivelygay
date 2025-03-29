@@ -9,6 +9,8 @@
 
 server "boneswebhome.lab.mahoosively.gay", user: "bones", roles: %w{app db web}
 
+branchName = %x(git branch --show-current).strip
+set :branch, branchName
 # role-based syntax
 # ==================
 
