@@ -2,7 +2,6 @@
 import MainBackgroundLayout from "./MainBackgroundLayout.astro";
 import Header from "../components/Header.astro";
 import Comments from "../components/BlogPostComments.astro";
-import { OgImage } from "astro-opengraph-image/components";
 const { frontmatter, postName } = Astro.props;
 ---
 
@@ -16,43 +15,8 @@ const { frontmatter, postName } = Astro.props;
       name="description"
       content="I write blog posts, sometimes they even make sense"
     />
-    <meta property="og:title" content={frontmatter.title} />
-		<meta property="og:type" content="article" />
-		<!-- <meta property="og:url" content={canonical} /> -->
-		<meta property="og:description" content="I write blog posts, sometimes they even make sense" />
-		<meta name="twitter:card" content="summary_large_image" />
     <title>{frontmatter.title}</title>
-    <OgImage>
-      <main>
-         <h2>{frontmatter.title}</h2>
-        <p>{frontmatter.description}</p>
-      </main>
-      <style is:inline>
-        h2 {
-          color: #cdd6f4;
-        }
-        h6 {
-          color: #cdd6f4;
-        }
-        span {
-          color: #cdd6f4;
-        }
-        main {
-          flex-direction: column;
-          padding-bottom:5px;
-          padding-left:10px;
-          padding-right:10px;
-          color: #cdd6f4;
-          background-color: #1e1e2e;
-          display: flex;
-          alignItems: center;
-          justifyContent: center;
-        }
-        html {
-          background-color: #1e1e2e;
-        }
-      </style>
-    </OgImage>
+
   </head>
 
   <body class="container">
