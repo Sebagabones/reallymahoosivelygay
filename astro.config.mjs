@@ -21,7 +21,6 @@ import { h } from 'hastscript'
 import autolinkHeadings from 'rehype-autolink-headings'
 
 // import opengraphImage from 'astro-opengraph-image';
-
 import { readFile } from "node:fs/promises";
 // const jsoncStringDark = fs.readFileSync(new URL(`./dark.jsonc`, import.meta.url), 'utf-8')
 // const dark = ExpressiveCodeTheme.fromJSONString(jsoncStringDark)
