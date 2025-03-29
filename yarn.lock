@@ -1474,6 +1474,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@stardazed/streams-compression@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@stardazed/streams-compression@npm:1.0.0"
+  dependencies:
+    "@stardazed/zlib": "npm:^1.0.0"
+  checksum: 10c0/90d0dafa610bce9640cf50fee56b68b710a2f0195e2b1396d81e37bf9a8457f7f1099bbc5ebd7d92fcbaf13fab10f840672f47543581ee6387038b54033f217e
+  languageName: node
+  linkType: hard
+
+"@stardazed/zlib@npm:^1.0.0":
+  version: 1.0.1
+  resolution: "@stardazed/zlib@npm:1.0.1"
+  checksum: 10c0/6b042ad5d6bd3958ab6b4a510b39af0c6ff62c39a29892ca846cb3962576aad634a542cc03f93145a81e67ea0efcb8d8c93c8832294677069aeaf61c52fa1a53
+  languageName: node
+  linkType: hard
+
 "@types/acorn@npm:^4.0.0":
   version: 4.0.6
   resolution: "@types/acorn@npm:4.0.6"
@@ -1775,6 +1791,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@worker-tools/html-rewriter@npm:^0.1.0-pre.19":
+  version: 0.1.0-pre.19
+  resolution: "@worker-tools/html-rewriter@npm:0.1.0-pre.19"
+  dependencies:
+    "@stardazed/streams-compression": "npm:^1.0.0"
+    "@worker-tools/resolvable-promise": "npm:latest"
+  checksum: 10c0/ac5c15537b746373da97ad3077b3833aea1ec37ae65ae4fcd364901d231115200149df3c4cf49576f9288c552cd597283ce7eb6966178a41c2111c2de23cca41
+  languageName: node
+  linkType: hard
+
+"@worker-tools/resolvable-promise@npm:latest":
+  version: 0.2.0-pre.6
+  resolution: "@worker-tools/resolvable-promise@npm:0.2.0-pre.6"
+  checksum: 10c0/500ec9d401ca3768222868d80eaeffff3fdce12ed448cd2c69a6bd3579a5e1e00b03e6e065e707abcac37cd68775c4a99d744ff432ba9a9df8eac121645f9725
+  languageName: node
+  linkType: hard
+
 "abbrev@npm:^3.0.0":
   version: 3.0.0
   resolution: "abbrev@npm:3.0.0"
@@ -1932,19 +1965,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"astro-opengraph-image@npm:^0.1.2":
-  version: 0.1.2
-  resolution: "astro-opengraph-image@npm:0.1.2"
+"astro-opengraph-image@npm:^0.2.2":
+  version: 0.2.2
+  resolution: "astro-opengraph-image@npm:0.2.2"
   dependencies:
     "@resvg/resvg-js": "npm:^2.6.2"
+    "@worker-tools/html-rewriter": "npm:^0.1.0-pre.19"
     devalue: "npm:^5.1.1"
+    entities: "npm:^6.0.0"
     lz-string: "npm:^1.5.0"
     satori: "npm:^0.12.1"
     satori-html: "npm:^0.3.2"
-    ultrahtml: "npm:^1.5.3"
   peerDependencies:
-    astro: ^5.5.2
-  checksum: 10c0/8b8e8f1b053edf3e9000476dc9bbc39c8b6be1fdd372709906736225aee6b14852f3af16a03c43c3e36427ea90e84e1cb8c401b1176da77aecc324df92942b4a
+    astro: ^4.0.0 || ^5.0.0
+  checksum: 10c0/03cb5c8a57d7e1945877f691d8abeab85418771f28c1d1ff60f6e19dda119425f44762975f53e40440af4f3828ec706c68607db6f24c2536d3dd1b918b99766b
   languageName: node
   linkType: hard
 
@@ -2695,6 +2729,13 @@ __metadata:
   version: 4.5.0
   resolution: "entities@npm:4.5.0"
   checksum: 10c0/5b039739f7621f5d1ad996715e53d964035f75ad3b9a4d38c6b3804bb226e282ffeae2443624d8fdd9c47d8e926ae9ac009c54671243f0c3294c26af7cc85250
+  languageName: node
+  linkType: hard
+
+"entities@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "entities@npm:6.0.0"
+  checksum: 10c0/b82a7bd5de282860f3c36a91e815e41e874fd036c83956a568b82729678492eb088359d6f7e0a4f5c00776427263fcba04959b8340fefa430c39b9bce770427e
   languageName: node
   linkType: hard
 
@@ -5558,7 +5599,7 @@ __metadata:
     "@types/react-dom": "npm:^19.0.2"
     astro: "npm:5.5.5"
     astro-expressive-code: "npm:^0.38.3"
-    astro-opengraph-image: "npm:^0.1.2"
+    astro-opengraph-image: "npm:^0.2.2"
     hast-util-to-string: "npm:^3.0.1"
     hastscript: "npm:^9.0.1"
     react: "npm:^19.0.0"

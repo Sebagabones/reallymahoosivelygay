@@ -17,7 +17,6 @@ import { toString } from 'hast-util-to-string'
 
 import { h } from 'hastscript'
 
-
 import autolinkHeadings from 'rehype-autolink-headings'
 
 import opengraphImage from 'astro-opengraph-image';
