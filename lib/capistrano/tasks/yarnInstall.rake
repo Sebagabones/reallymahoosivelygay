@@ -7,4 +7,5 @@ task :yarnInstall do
       execute :yarn, "install"
     end
   end
+  invoke(:yarnUpgrade)
 end
