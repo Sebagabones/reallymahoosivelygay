@@ -1,22 +1,59 @@
 @import url(https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.violet.min.css);
 
 @import url(https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css);
-@import "@fontsource/jetbrains-mono";
-@import "@fontsource/jetbrains-mono/400.css";
-@import "@fontsource/jetbrains-mono/400-italic.css";
+
 /* @import url(https://cdn.jsdelivr.net/npm/victormono@latest/dist/index.min.css); */
 
 
+/* @font-face { */
+/*   font-family: 'JetBrains Mono'; */
+/*   src: url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2') format('woff2'), */
+/*     url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff/JetBrainsMono-Regular.woff') format('woff'); */
+/*   font-weight: 400; */
+/*   font-style: monospace; */
+/*   font-display: swap; */
+/* } */
 @font-face {
-  font-family: 'JetBrains Mono';
-  src: url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff2/JetBrainsMono-Regular.woff2') format('woff2'),
-    url('https://cdn.jsdelivr.net/gh/JetBrains/JetBrainsMono/web/woff/JetBrainsMono-Regular.woff') format('woff');
+  font-family: 'Fira Code';
+  src: url('/fonts/FiraCodeNerdFont-Regular.woff') format('woff');
   font-weight: 400;
-  font-style: monospace;
+  font-style: normal;
   font-display: swap;
 }
-@supports (font-variation-settings: normal) {
-  code { font-family: 'JetBrains Mono', monospace; }
+@font-face {
+  font-family: 'Fira Code';
+  src: url('/fonts/FiraCodeNerdFont-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMonoNerdFont-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMonoNerdFont-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/JetBrainsMonoNerdFont-Italic.woff') format('woff');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+pre,
+pre code,
+pre code span {
+  font-family: 'JetBrains Mono', monospace !important;
 }
 
 body{
