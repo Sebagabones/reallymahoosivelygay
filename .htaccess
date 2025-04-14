@@ -1,0 +1,5 @@
+# Set Referrer Policy
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+# Set Content Security Policy
+Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; object-src 'none'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self';"

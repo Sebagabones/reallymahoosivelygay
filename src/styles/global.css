@@ -1,4 +1,5 @@
-@import url(https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.violet.min.css);
+@import url("./pico.violet.min.css");
+/* @import url(https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.violet.min.css); */
 
 /* @import url(https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css); */
 
