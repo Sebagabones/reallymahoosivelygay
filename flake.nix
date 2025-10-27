@@ -37,6 +37,12 @@
         index = "src/pages/index.astro";
         src = ./.;
         bunNix = ./bun.nix;
+        buildPhase = ''
+          bun run build
+        '';
+        installPhase = ''
+          cp -r dist $out
+        '';
         # pname = "Mahoosively Gay";
         # version = "1.0.0";
         #

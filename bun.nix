@@ -1812,6 +1812,12 @@
     url = "https://registry.npmjs.org/hast-util-has-property/-/hast-util-has-property-3.0.0.tgz";
     hash = "sha512-MNilsvEKLFpV604hwfhVStK0usFY/QmM5zX16bo7EjnAEGofr5YyI37kzopBlZJkHD4t887i+q/C8/tr5Q94cA==";
   };
+  "hast-util-heading-rank" = {
+    out_path = "hast-util-heading-rank";
+    name = "hast-util-heading-rank@3.0.0";
+    url = "https://registry.npmjs.org/hast-util-heading-rank/-/hast-util-heading-rank-3.0.0.tgz";
+    hash = "sha512-EJKb8oMUXVHcWZTDepnr+WNbfnXKFNf9duMesmr4S8SXTJBJ9M4Yok08pu9vxdJwdlGRhVumk9mEhkEvKGifwA==";
+  };
   "hast-util-is-element" = {
     out_path = "hast-util-is-element";
     name = "hast-util-is-element@3.0.0";
@@ -2741,6 +2747,12 @@
     name = "rehype@13.0.2";
     url = "https://registry.npmjs.org/rehype/-/rehype-13.0.2.tgz";
     hash = "sha512-j31mdaRFrwFRUIlxGeuPXXKWQxet52RBQRvCmzl5eCefn/KGbomK5GMHNMsOJf55fgo3qw5tST5neDuarDYR2A==";
+  };
+  "rehype-autolink-headings" = {
+    out_path = "rehype-autolink-headings";
+    name = "rehype-autolink-headings@7.1.0";
+    url = "https://registry.npmjs.org/rehype-autolink-headings/-/rehype-autolink-headings-7.1.0.tgz";
+    hash = "sha512-rItO/pSdvnvsP4QRB1pmPiNHUskikqtPojZKJPPPAVx9Hj8i8TwMBhofrrAYRhYOOBZH9tgmG5lPqDLuIWPWmw==";
   };
   "rehype-expressive-code" = {
     out_path = "rehype-expressive-code";

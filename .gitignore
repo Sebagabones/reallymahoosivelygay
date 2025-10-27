@@ -32,3 +32,4 @@ pnpm-debug.log*
 
 log/
 .direnv
+/result
