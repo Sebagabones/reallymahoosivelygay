@@ -1,7 +1,6 @@
 ---
 import '../styles/global.css'
 import MainBackgroundLayout from '../layouts/MainBackgroundLayout.astro'
-import { Image } from 'astro:assets';
 import fullFrontRackPic from '../assets/fullFrontalRack.JPG';
 const pageTitle = "My amazing rack";
 const pageSubHeading = " ";
@@ -20,7 +19,7 @@ export const prerender = true;
 		<div class="grid spacing">
 			<div class="figDiv">
 				<figure>
-					<Image class="fullFrontalRack" src={fullFrontRackPic}
+					<img class="fullFrontalRack" src={fullFrontRackPic}
 						alt="The current setup of the rack, as seen from the front with the door open" />
 				</figure>
 			</div>
