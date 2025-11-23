@@ -38,7 +38,7 @@
           bun run build
         '';
         installPhase = ''
-          cp -r dist $out
+          cp -R dist $out
         '';
       };
       formatter.${system} = pkgs.nixpkgs-fmt;
