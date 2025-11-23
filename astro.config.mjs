@@ -99,13 +99,5 @@ export default defineConfig({
       },
     ],
   })],
-
-  adapter: node({
-    mode: "standalone",
-    middleware: async (request, response, next) => {
-      // Add security headers
-      response.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
-      await next();
-    },
-  }),
+  output: 'static',
 });
