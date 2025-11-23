@@ -50,6 +50,7 @@ export default defineConfig({
   site: "https://mahoosively.gay",
   prefetch: {
     prefetchAll: true,
+    defaultStrategy: 'viewport'
   },
 
   scopedStyleStrategy: "attribute",
