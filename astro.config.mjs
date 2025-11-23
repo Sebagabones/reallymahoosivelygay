@@ -52,7 +52,9 @@ export default defineConfig({
     prefetchAll: true,
     defaultStrategy: 'viewport'
   },
-
+  experimental: {
+    clientPrerender: true,
+  },
   scopedStyleStrategy: "attribute",
 
   integrations: [astroExpressiveCode({
