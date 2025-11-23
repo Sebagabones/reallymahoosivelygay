@@ -28,6 +28,10 @@
 /*   font-display: swap; */
 /* } */
 
+nav details.dropdown {
+  display: inline-block;
+}
+
 @font-face {
   font-family: "JetBrains Mono";
   src: url("/fonts/JetBrainsMonoNerdFont-Regular.woff2") format("woff2");
